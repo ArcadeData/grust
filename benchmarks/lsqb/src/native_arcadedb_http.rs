@@ -212,7 +212,11 @@ impl Connection {
                 _ => {}
             }
         }
-        let body = if chunked {
+        // 204/304 and 1xx responses never carry a body (RFC 9112 6.3); ArcadeDB
+        // answers /api/v1/begin with 204 and no length.
+        let body = if status == 204 || status == 304 || status < 200 {
+            Vec::new()
+        } else if chunked {
             let mut body = Vec::new();
             loop {
                 let mut limit = MAX_HEADER_BYTES;
@@ -275,6 +279,36 @@ mod tests {
         ] {
             assert_eq!(base64(input.as_bytes()), output);
         }
+    }
+
+    fn serve(responses: &'static [u8]) -> String {
+        let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+        let address = listener.local_addr().unwrap();
+        std::thread::spawn(move || {
+            let (mut stream, _) = listener.accept().unwrap();
+            let mut request = [0; 4096];
+            let _ = stream.read(&mut request);
+            stream.write_all(responses).unwrap();
+        });
+        format!("http://{address}")
+    }
+
+    #[test]
+    fn reads_no_content_with_session_then_keeps_the_connection() {
+        let url = serve(b"HTTP/1.1 204 No Content\r\narcadedb-session-id: AS-1\r\n\r\n\
+            HTTP/1.1 200 OK\r\nTransfer-Encoding: chunked\r\n\r\n4\r\n{\"a\"\r\n3\r\n:1}\r\n0\r\n\r\n");
+        let mut connection = Connection::open(&url, "root", "pw", Duration::from_secs(5)).unwrap();
+        let begun = connection.request("POST", "/api/v1/begin/db", None, b"").unwrap();
+        assert_eq!((begun.status, begun.session.as_deref(), begun.body.len()), (204, Some("AS-1"), 0));
+        let next = connection.read_response().unwrap();
+        assert_eq!(next.json().unwrap(), serde_json::json!({"a": 1}));
+    }
+
+    #[test]
+    fn a_body_without_length_or_chunking_is_refused() {
+        let url = serve(b"HTTP/1.1 200 OK\r\n\r\n{}");
+        let mut connection = Connection::open(&url, "root", "pw", Duration::from_secs(5)).unwrap();
+        assert!(connection.request("GET", "/", None, b"").is_err());
     }
 
     #[test]
