@@ -14,11 +14,15 @@ import subprocess
 import sys
 import time
 
-# Pinned once the release is published: tag plus the platform image digests its
-# multi-platform index names. Until then only --diagnostic-server-image runs,
-# and those runs are marked so the bundle refuses them.
-SERVER_IMAGE_TAG = 'arcadedata/arcadedb:26.10.2'
-SERVER_IMAGE_DIGESTS = {}
+# The pinned server: tag plus the platform image digests its multi-platform
+# index names. Provisional: the 26.11.1-SNAPSHOT published on 2026-10-10
+# (Temurin 25, contains ArcadeDB #9680); replaced by 26.10.2 once released.
+# Anything else runs only with --diagnostic-server-image, marked unpinned.
+SERVER_IMAGE_TAG = 'arcadedata/arcadedb:26.11.1-SNAPSHOT'
+SERVER_IMAGE_DIGESTS = {
+    'aarch64': 'sha256:49cc61ad0cc1d46d9a4aa5a3efd5a8390d8a55b034e352ee7149e173ee1448d3',
+    'x86_64': 'sha256:d9566c37eb144cb4aa5477cf478c8548614880fd1d5824b400ce2ad61f725a57',
+}
 SERVER_IMAGES = {f'{SERVER_IMAGE_TAG}@{digest}' for digest in SERVER_IMAGE_DIGESTS.values()}
 MEMORY = 6 * 1024**3
 NANO_CPUS = 8_000_000_000

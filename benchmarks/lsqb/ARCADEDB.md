@@ -2,9 +2,11 @@
 
 **Status: diagnostic, not publishable yet.** Counts, sampling, runtime records,
 the coordinator deadline and server-side cancellation all qualify on a server
-built from ArcadeDB `main`; what is missing is the pinned 26.10.2 release image,
-which will contain the running-statement listing and termination
+built from ArcadeDB `main` and on the published `26.11.1-SNAPSHOT` image, which
+contains the running-statement listing and termination
 ([ArcadeData/arcadedb#9680](https://github.com/ArcadeData/arcadedb/issues/9680)).
+The server pin is provisional: that snapshot (2026-10-10, Temurin 25) until the
+26.10.2 release, cut from the same `main`, replaces it.
 These are not LDBC Benchmark Results.
 
 This is a native engine comparator modelled on the [Neo4j lane](NEO4J.md), not
@@ -13,7 +15,8 @@ a Grust adapter. The private harness feature is `arcadedb-native`; the binary is
 
 ## Protocol
 
-- **Server:** the pinned ArcadeDB release image (26.10.2 once published, cut from `main` with #9680; the
+- **Server:** the pinned ArcadeDB image (for now `arcadedata/arcadedb:26.11.1-SNAPSHOT`
+  by platform digest, to be replaced by 26.10.2; the
   runner accepts others only with `--diagnostic-server-image`, and those runs
   are marked unpinned and cannot be bundled). 8 CPU / 6 GiB without swap, no
   host ports, attached only to the internal `grust-lsqb-arcadedb-qualification`
@@ -105,7 +108,7 @@ Probes on the same server:
 
 1. ArcadeDB 26.10.2, released from `main` (which has #9680, merged as
    `2384a46e52`); check the release contains that commit.
-2. Pin the 26.10.2 platform image digests in `run-native-arcadedb.py` and
+2. Replace the provisional `26.11.1-SNAPSHOT` pin with the 26.10.2 platform image digests in `run-native-arcadedb.py` and
    `validate-arcadedb-diagnostic.py`, and the reviewed client source/image in
    `CLIENT_PROFILES`.
 3. Clean-host W2/R10 runs at example, SF0.1 and SF0.3, then
