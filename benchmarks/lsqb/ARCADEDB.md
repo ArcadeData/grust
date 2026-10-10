@@ -2,8 +2,8 @@
 
 **Status: diagnostic, not publishable yet.** Counts, sampling, runtime records,
 the coordinator deadline and server-side cancellation all qualify on a server
-built from ArcadeDB `main`; what is missing is a pinned release image that
-contains the running-statement listing and termination
+built from ArcadeDB `main`; what is missing is the pinned 26.10.2 release image,
+which will contain the running-statement listing and termination
 ([ArcadeData/arcadedb#9680](https://github.com/ArcadeData/arcadedb/issues/9680)).
 These are not LDBC Benchmark Results.
 
@@ -13,7 +13,7 @@ a Grust adapter. The private harness feature is `arcadedb-native`; the binary is
 
 ## Protocol
 
-- **Server:** the pinned ArcadeDB release image (the first release with #9680; the
+- **Server:** the pinned ArcadeDB release image (26.10.2 once published, cut from `main` with #9680; the
   runner accepts others only with `--diagnostic-server-image`, and those runs
   are marked unpinned and cannot be bundled). 8 CPU / 6 GiB without swap, no
   host ports, attached only to the internal `grust-lsqb-arcadedb-qualification`
@@ -103,9 +103,9 @@ Probes on the same server:
 
 ## Before publication
 
-1. A released ArcadeDB image that contains #9680 (merged to `main` as
-   `2384a46e52`).
-2. Pin the platform image digests of that release in `run-native-arcadedb.py` and
+1. ArcadeDB 26.10.2, released from `main` (which has #9680, merged as
+   `2384a46e52`); check the release contains that commit.
+2. Pin the 26.10.2 platform image digests in `run-native-arcadedb.py` and
    `validate-arcadedb-diagnostic.py`, and the reviewed client source/image in
    `CLIENT_PROFILES`.
 3. Clean-host W2/R10 runs at example, SF0.1 and SF0.3, then
