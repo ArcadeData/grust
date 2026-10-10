@@ -6,8 +6,7 @@ use grust_lsqb_runner::observation_process::{self, IsolatedObservation, WorkerOu
 use serde_json::{Value, json};
 
 /// Single-threaded CPU work that outlives a short coordinator deadline.
-pub(super) const WORK: &str =
-    "UNWIND range(1, 10000) AS i UNWIND range(1, 10000) AS j RETURN sum(sin(toFloat(i * j))) AS total";
+pub(super) const WORK: &str = "UNWIND range(1, 10000) AS i UNWIND range(1, 10000) AS j RETURN sum(sin(toFloat(i * j))) AS total";
 
 pub(super) fn probe() -> Result<(), &'static str> {
     if std::env::var("ARCADEDB_BENCHMARK_DISPOSABLE").as_deref() != Ok("1") {
@@ -20,7 +19,11 @@ pub(super) fn probe() -> Result<(), &'static str> {
     }
     // The abandoned statement was still running: the coordinator must have
     // terminated it, not merely waited for it.
-    if recovery["terminated_statement_ids"].as_array().map(Vec::len) != Some(1) {
+    if recovery["terminated_statement_ids"]
+        .as_array()
+        .map(Vec::len)
+        != Some(1)
+    {
         return Err("deadline probe statement was not terminated on the server");
     }
     let (next, next_recovery) = run("RETURN 42 AS count", 5_000)?;
@@ -87,7 +90,12 @@ pub(super) fn worker() -> Result<(), &'static str> {
     // Rollback belongs to the measured completion boundary. An error is never
     // converted into a timeout by the worker; only the coordinator owns that.
     let rolled_back = connection
-        .request("POST", &session_path("rollback", database), Some(&session), b"")
+        .request(
+            "POST",
+            &session_path("rollback", database),
+            Some(&session),
+            b"",
+        )
         .is_ok_and(|response| response.status == 204 || response.status == 200);
     let result = result.and_then(|count| {
         if rolled_back {
@@ -111,7 +119,10 @@ pub(super) fn worker() -> Result<(), &'static str> {
     .map_err(|_| "worker result failed")
 }
 
-pub(super) fn run(statement: &str, timeout_ms: u64) -> Result<(IsolatedObservation, Value), &'static str> {
+pub(super) fn run(
+    statement: &str,
+    timeout_ms: u64,
+) -> Result<(IsolatedObservation, Value), &'static str> {
     if timeout_ms == 0 || timeout_ms > 600_000 || statement.len() > 100_000 {
         return Err("invalid native observation bounds");
     }

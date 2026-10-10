@@ -63,7 +63,11 @@ fn upper_snake(value: &str) -> String {
 /// Message rows carry their concrete subtype in `kind`.
 fn vertex_type<'a>(label: &'a str, props: &'a Props) -> &'a str {
     match props.get("kind") {
-        Some(Value::String(kind)) if label == "Message" && ["Post", "Comment"].contains(&kind.as_str()) => kind,
+        Some(Value::String(kind))
+            if label == "Message" && ["Post", "Comment"].contains(&kind.as_str()) =>
+        {
+            kind
+        }
         _ => label,
     }
 }
@@ -86,7 +90,10 @@ fn ndjson(chunk: &grust_core::Graph) -> Result<Vec<u8>, &'static str> {
     for node in &chunk.nodes {
         let mut row = Map::new();
         row.insert("@type".into(), json!("vertex"));
-        row.insert("@class".into(), json!(identifier(vertex_type(node.label.as_str(), &node.props))?));
+        row.insert(
+            "@class".into(),
+            json!(identifier(vertex_type(node.label.as_str(), &node.props))?),
+        );
         row.insert("@id".into(), json!(node.id.as_str()));
         properties(&node.props, &mut row)?;
         serde_json::to_writer(&mut output, &row).map_err(|_| "serialize vertex failed")?;
@@ -102,7 +109,11 @@ fn ndjson(chunk: &grust_core::Graph) -> Result<Vec<u8>, &'static str> {
     Ok(output)
 }
 
-fn command(connection: &mut Connection, settings: &Settings, sql: &str) -> Result<(), &'static str> {
+fn command(
+    connection: &mut Connection,
+    settings: &Settings,
+    sql: &str,
+) -> Result<(), &'static str> {
     let response = connection.json(
         &format!("/api/v1/command/{}", settings.database),
         None,
@@ -131,19 +142,34 @@ pub(super) fn load(
     }
     let started = Instant::now();
     ok(
-        connection.json("/api/v1/server", None, &json!({"command": format!("create database {database}")}))?,
+        connection.json(
+            "/api/v1/server",
+            None,
+            &json!({"command": format!("create database {database}")}),
+        )?,
         "ArcadeDB database creation failed",
     )?;
     let (vertices, edges) = schema(directory)?;
     let subtypes = ["Post", "Comment"];
-    if vertices.iter().any(|vertex| subtypes.contains(&vertex.as_str())) {
+    if vertices
+        .iter()
+        .any(|vertex| subtypes.contains(&vertex.as_str()))
+    {
         command(connection, settings, "CREATE VERTEX TYPE Message")?;
     }
     for vertex in &vertices {
         if subtypes.contains(&vertex.as_str()) {
-            command(connection, settings, &format!("CREATE VERTEX TYPE {vertex} EXTENDS Message"))?;
+            command(
+                connection,
+                settings,
+                &format!("CREATE VERTEX TYPE {vertex} EXTENDS Message"),
+            )?;
         } else {
-            command(connection, settings, &format!("CREATE VERTEX TYPE {vertex}"))?;
+            command(
+                connection,
+                settings,
+                &format!("CREATE VERTEX TYPE {vertex}"),
+            )?;
         }
     }
     for edge in &edges {
@@ -187,7 +213,11 @@ pub(super) fn load(
             edges.join(", ")
         ),
     )?;
-    command(connection, settings, &format!("REBUILD GRAPH ANALYTICAL VIEW {database}"))?;
+    command(
+        connection,
+        settings,
+        &format!("REBUILD GRAPH ANALYTICAL VIEW {database}"),
+    )?;
     Ok(Loaded {
         nodes,
         edges: edges_created,
@@ -204,8 +234,14 @@ mod tests {
     #[test]
     fn schema_follows_the_projected_file_names() {
         let directory = tempfile::tempdir().unwrap();
-        for name in ["Person.csv", "Comment.csv", "Post.csv", "Person_knows_Person.csv",
-            "Comment_replyOf_Post.csv", "notes.txt"] {
+        for name in [
+            "Person.csv",
+            "Comment.csv",
+            "Post.csv",
+            "Person_knows_Person.csv",
+            "Comment_replyOf_Post.csv",
+            "notes.txt",
+        ] {
             fs::write(directory.path().join(name), "x\n").unwrap();
         }
         let (vertices, edges) = schema(directory.path()).unwrap();
@@ -217,8 +253,14 @@ mod tests {
 
     #[test]
     fn messages_become_their_subtype_and_keep_kind() {
-        let post = Node::new("Message", "Post:7", Props::from([
-            ("kind".into(), Value::from("Post")), ("source_id".into(), Value::Int(7))]));
+        let post = Node::new(
+            "Message",
+            "Post:7",
+            Props::from([
+                ("kind".into(), Value::from("Post")),
+                ("source_id".into(), Value::Int(7)),
+            ]),
+        );
         let person = Node::new("Person", "Person:1", Props::new());
         let edge = Edge::new("HAS_CREATOR", "Post:7", "Person:1", Props::new())
             .with_id(EdgeId::new("Post_hasCreator_Person:1"));
@@ -233,14 +275,29 @@ mod tests {
         assert_eq!(rows[0]["kind"], "Post");
         assert_eq!(rows[0]["id"], "Post:7");
         assert_eq!(rows[1]["@class"], "Person");
-        assert_eq!(rows[2], json!({"@type": "edge", "@class": "HAS_CREATOR", "@from": "Post:7",
-            "@to": "Person:1", "id": "Post_hasCreator_Person:1"}));
+        assert_eq!(
+            rows[2],
+            json!({"@type": "edge", "@class": "HAS_CREATOR", "@from": "Post:7",
+            "@to": "Person:1", "id": "Post_hasCreator_Person:1"})
+        );
     }
 
     #[test]
     fn only_projected_scalar_properties_are_accepted() {
         let mut row = Map::new();
-        assert!(properties(&Props::from([("id".into(), Value::from("Person:1"))]), &mut row).is_ok());
-        assert!(properties(&Props::from([("unsupported".into(), Value::Null)]), &mut row).is_err());
+        assert!(
+            properties(
+                &Props::from([("id".into(), Value::from("Person:1"))]),
+                &mut row
+            )
+            .is_ok()
+        );
+        assert!(
+            properties(
+                &Props::from([("unsupported".into(), Value::Null)]),
+                &mut row
+            )
+            .is_err()
+        );
     }
 }

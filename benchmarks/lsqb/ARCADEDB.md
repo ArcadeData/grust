@@ -1,12 +1,11 @@
 # Native ArcadeDB comparison lane
 
-**Status: diagnostic, not publishable yet.** Counts, sampling, runtime records
-and the coordinator deadline all qualify. Server-side cancellation proof does
-not exist yet: ArcadeDB has no HTTP listing or targeted termination of running
-statements ([ArcadeData/arcadedb#9680](https://github.com/ArcadeData/arcadedb/issues/9680)).
-Every observation records `cancellation_verified: false` with that reference,
-the audit's `--require-cancellation` gate refuses such runs, and
-`bundle-native-arcadedb.py` applies the gate. These are not LDBC Benchmark Results.
+**Status: diagnostic, not publishable yet.** Counts, sampling, runtime records,
+the coordinator deadline and server-side cancellation all qualify on a server
+built from ArcadeDB `main`; what is missing is a pinned release image that
+contains the running-statement listing and termination
+([ArcadeData/arcadedb#9680](https://github.com/ArcadeData/arcadedb/issues/9680)).
+These are not LDBC Benchmark Results.
 
 This is a native engine comparator modelled on the [Neo4j lane](NEO4J.md), not
 a Grust adapter. The private harness feature is `arcadedb-native`; the binary is
@@ -14,7 +13,7 @@ a Grust adapter. The private harness feature is `arcadedb-native`; the binary is
 
 ## Protocol
 
-- **Server:** the pinned ArcadeDB release image (26.10.2 once published; the
+- **Server:** the pinned ArcadeDB release image (the first release with #9680; the
   runner accepts others only with `--diagnostic-server-image`, and those runs
   are marked unpinned and cannot be bundled). 8 CPU / 6 GiB without swap, no
   host ports, attached only to the internal `grust-lsqb-arcadedb-qualification`
@@ -43,8 +42,17 @@ a Grust adapter. The private harness feature is `arcadedb-native`; the binary is
   opens an HTTP transaction session (`/api/v1/begin`) before READY; after GO it
   runs the query in that session, consumes the single scalar and rolls back
   (`/api/v1/rollback`), all inside the measured interval.
-- **Recovery:** after every sample a separate connection runs `RETURN 42`.
-  Proof that the server no longer works on the sample's statement needs #9680.
+- **Recovery:** the worker sends `X-ArcadeDB-Query-Tag: arcadedb-<pid>-<nanos>`
+  on `/api/v1/begin` and on its query, so the server lists the sample's session
+  and statement under that tag. After every sample, whatever its outcome, a
+  separate connection lists them (`list queries tag <tag>`, `list transactions`),
+  terminates exactly those (`terminate query <id>`, `terminate transaction <id>`)
+  and polls until neither listing holds the tag, within 15 seconds or the run
+  stops. A statement leaves ArcadeDB's listing only after its rollback and
+  cleanup, so absence means the server no longer works on it. Then `RETURN 42`.
+  Each observation records `cancellation_verified: true`, the terminated
+  statement and session ids, work that ended before termination, and zero
+  owned statements and sessions remaining; the audit requires all of it.
 
 ## Running
 
@@ -67,31 +75,37 @@ server go idle before starting: the host preflight refuses a busy Docker VM.
 
 ## Development runs (unpinned, not publishable)
 
-Client source `9899d885`, server built from ArcadeDB `main` at `2b0a7a636f` on
-`eclipse-temurin:25-alpine` (the base 26.10.2 will ship), one Apple Silicon
-laptop on AC power, `--diagnostic-server-image`. All three passed
-`validate-arcadedb-diagnostic.py --runtime --unpinned --matched-sampling`:
+Client source `1c11257e`, server built from ArcadeDB `main` at `2384a46e52`
+(#9680 merged) on `eclipse-temurin:25-alpine`, one Apple Silicon laptop on AC
+power, `--diagnostic-server-image`. All three passed
+`validate-arcadedb-diagnostic.py --runtime --unpinned --matched-sampling --require-cancellation`:
 264 of 264 samples pass (44 warm-ups, 220 measurements), no mismatch, timeout
-or error, journal and report identical.
+or error, cancellation verified on every sample with nothing left running
+(every sample rolled back on its own, so no targeted termination was needed),
+journal and report identical. The recovery check takes a median 0.6-0.7 ms and
+is outside the measured interval.
 
 | Scale | Load (import + view) | q1-q9 medians | slowest attack medians |
 |---|---|---|---|
-| example | 0.4 s | 1.1-2.3 ms | a6 2.8 ms |
-| SF0.1 | 10.5 s (8.4 + 2.0) | 7.0-24.6 ms | a2 119 ms, a1 43 ms, a5 37 ms |
-| SF0.3 | 29.2 s (20.6 + 8.6) | 17.3-82.1 ms | a2 484 ms, a1 147 ms, a5 145 ms |
+| example | 0.4 s | 1.1-2.3 ms | a6 2.6 ms |
+| SF0.1 | 9.9 s (8.2 + 1.6) | 7.2-24.5 ms | a2 110 ms, a1 38 ms, a5 34 ms |
+| SF0.3 | 27.8 s (18.9 + 8.8) | 16.9-79.9 ms | a2 446 ms, a1 140 ms, a5 136 ms |
 
-The forced 2-second deadline probe passed on the coordinator side (deadline at
-2.0007 s, SIGTERM and reap in 2.3 ms, next isolated scalar 42), and showed the
-gap #9680 closes: the server kept one core busy for about ten more seconds on
-the abandoned statement. The targeted-termination `recovery-probe` refuses to
-run until #9680 exists.
+Probes on the same server:
+- `recovery-probe`: the stress statement was observed running inside its tagged
+  session, `terminate query` acknowledged `terminated` after 106 ms, the worker
+  request failed with HTTP 409, no tagged statement or session remained, next
+  scalar 42.
+- `deadline-probe`: the coordinator deadline fired at 2.0003 s (SIGTERM); the
+  server was still running the abandoned statement, which the recovery step
+  terminated (its session ended with it) in 28 ms; the next isolated scalar
+  returned 42.
 
 ## Before publication
 
-1. ArcadeDB #9680, then tag each statement, list and terminate it in
-   `native_arcadedb_recovery.rs`, record `owned_statements_remaining: 0`, and
-   implement `recovery-probe`.
-2. Pin the 26.10.2 platform image digests in `run-native-arcadedb.py` and
+1. A released ArcadeDB image that contains #9680 (merged to `main` as
+   `2384a46e52`).
+2. Pin the platform image digests of that release in `run-native-arcadedb.py` and
    `validate-arcadedb-diagnostic.py`, and the reviewed client source/image in
    `CLIENT_PROFILES`.
 3. Clean-host W2/R10 runs at example, SF0.1 and SF0.3, then

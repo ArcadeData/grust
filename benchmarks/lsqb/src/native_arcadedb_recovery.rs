@@ -54,7 +54,10 @@ fn termination(expected: &str, answer: &Value) -> Result<Termination, &'static s
 fn owned_from(tag: &str, queries: &Value, sessions: &Value) -> Result<Owned, &'static str> {
     let ids = |rows: &Value, of_tag: bool| -> Result<Vec<String>, &'static str> {
         let mut ids = Vec::new();
-        for row in rows.as_array().ok_or("running work listing is not a list")? {
+        for row in rows
+            .as_array()
+            .ok_or("running work listing is not a list")?
+        {
             if row.get("tag").and_then(Value::as_str) != Some(tag) {
                 if of_tag {
                     return Err("tag listing returned other work");
@@ -159,19 +162,26 @@ pub(super) fn verify(tag: &str) -> Result<Value, &'static str> {
         return Err("native recovery scalar mismatch");
     }
     ended.retain(|id| !terminated_statements.contains(id) && !terminated_sessions.contains(id));
-    Ok(json!({"transaction_tag": tag, "cancellation_verified": true,
+    Ok(
+        json!({"transaction_tag": tag, "cancellation_verified": true,
         "owned_statements_remaining": 0, "owned_sessions_remaining": 0,
         "targeted_termination_count": terminated_statements.len() + terminated_sessions.len(),
         "terminated_statement_ids": terminated_statements, "terminated_session_ids": terminated_sessions,
         "ended_before_termination_ids": ended,
-        "subsequent_scalar": 42, "server_recovery_ns": started.elapsed().as_nanos()}))
+        "subsequent_scalar": 42, "server_recovery_ns": started.elapsed().as_nanos()}),
+    )
 }
 
 /// The probes run against their own empty database, never the benchmark one.
 pub(super) fn probe_database() -> Result<(), &'static str> {
     let (mut connection, settings) = super::connect()?;
     let exists = super::ok(
-        connection.request("GET", &format!("/api/v1/exists/{}", settings.database), None, b"")?,
+        connection.request(
+            "GET",
+            &format!("/api/v1/exists/{}", settings.database),
+            None,
+            b"",
+        )?,
         "ArcadeDB database existence check failed",
     )?;
     if exists.get("result") == Some(&json!(true)) {
@@ -205,7 +215,12 @@ pub(super) fn probe() -> Result<(), &'static str> {
     );
     let (mut worker, settings) = super::connect_with_timeout(Duration::from_secs(60))?;
     worker.set_tag(&tag)?;
-    let begun = worker.request("POST", &format!("/api/v1/begin/{}", settings.database), None, b"")?;
+    let begun = worker.request(
+        "POST",
+        &format!("/api/v1/begin/{}", settings.database),
+        None,
+        b"",
+    )?;
     if begun.status != 204 && begun.status != 200 {
         return Err("probe transaction failed");
     }
@@ -232,7 +247,9 @@ pub(super) fn probe() -> Result<(), &'static str> {
         if started.elapsed() > Duration::from_secs(10) {
             // No unrelated statement is ever terminated. A failed probe is
             // not recovery proof; its dedicated service must be stopped.
-            return Err("owned stress statement was not observed running; stop the dedicated service");
+            return Err(
+                "owned stress statement was not observed running; stop the dedicated service",
+            );
         }
         std::thread::sleep(Duration::from_millis(20));
     };
@@ -280,10 +297,22 @@ mod tests {
     #[test]
     fn only_a_terminated_answer_for_the_same_work_is_an_acknowledgement() {
         let answer = |id, status| json!({"id": id, "status": status});
-        assert_eq!(termination("q1", &answer("q1", "terminated")), Ok(Termination::Terminated));
-        assert_eq!(termination("q1", &answer("q1", "completed")), Ok(Termination::Ended));
-        assert_eq!(termination("q1", &answer("q1", "not found")), Ok(Termination::Ended));
-        assert_eq!(termination("q1", &answer("q1", "terminating")), Ok(Termination::Pending));
+        assert_eq!(
+            termination("q1", &answer("q1", "terminated")),
+            Ok(Termination::Terminated)
+        );
+        assert_eq!(
+            termination("q1", &answer("q1", "completed")),
+            Ok(Termination::Ended)
+        );
+        assert_eq!(
+            termination("q1", &answer("q1", "not found")),
+            Ok(Termination::Ended)
+        );
+        assert_eq!(
+            termination("q1", &answer("q1", "terminating")),
+            Ok(Termination::Pending)
+        );
         assert!(termination("q1", &answer("q2", "terminated")).is_err());
         assert!(termination("q1", &answer("q1", "unknown")).is_err());
         assert!(termination("q1", &json!({"status": "terminated"})).is_err());
@@ -293,15 +322,26 @@ mod tests {
     fn owned_work_is_only_work_carrying_the_tag() {
         let tag = "arcadedb-1-2";
         let queries = json!([{"id": "q7", "tag": tag}]);
-        let sessions = json!([{"id": "AS-1", "tag": tag}, {"id": "AS-2", "tag": "other"}, {"id": "AS-3"}]);
+        let sessions =
+            json!([{"id": "AS-1", "tag": tag}, {"id": "AS-2", "tag": "other"}, {"id": "AS-3"}]);
         assert_eq!(
             owned_from(tag, &queries, &sessions),
-            Ok(Owned { statements: vec!["q7".into()], sessions: vec!["AS-1".into()] })
+            Ok(Owned {
+                statements: vec!["q7".into()],
+                sessions: vec!["AS-1".into()]
+            })
         );
         assert!(owned_from(tag, &json!([]), &json!([])).unwrap().is_empty());
         // The server filtered by tag: anything else in that listing is wrong.
         assert!(owned_from(tag, &json!([{"id": "q8", "tag": "other"}]), &json!([])).is_err());
-        assert!(owned_from(tag, &json!([{"id": "q1", "tag": tag}, {"id": "q2", "tag": tag}]), &json!([])).is_err());
+        assert!(
+            owned_from(
+                tag,
+                &json!([{"id": "q1", "tag": tag}, {"id": "q2", "tag": tag}]),
+                &json!([])
+            )
+            .is_err()
+        );
         assert!(owned_from(tag, &json!([{"id": "q 1", "tag": tag}]), &json!([])).is_err());
         assert!(owned_from(tag, &json!({}), &json!([])).is_err());
     }

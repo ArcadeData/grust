@@ -57,7 +57,11 @@ pub(super) fn tag(value: &str) -> Result<&str, &'static str> {
                     .iter()
                     .all(|part| !part.is_empty() && part.bytes().all(|byte| byte.is_ascii_digit()))
             });
-    if valid { Ok(value) } else { Err("ArcadeDB query tag is invalid") }
+    if valid {
+        Ok(value)
+    } else {
+        Err("ArcadeDB query tag is invalid")
+    }
 }
 
 /// `http://host:port` only: the server is on a private network without TLS.
@@ -107,7 +111,14 @@ impl Connection {
         Ok(())
     }
 
-    fn head(&self, method: &str, path: &str, session: Option<&str>, framing: &str, content_type: &str) -> String {
+    fn head(
+        &self,
+        method: &str,
+        path: &str,
+        session: Option<&str>,
+        framing: &str,
+        content_type: &str,
+    ) -> String {
         let mut head = format!(
             "{method} {path} HTTP/1.1\r\nHost: {}\r\nAuthorization: {}\r\nAccept: application/json\r\nContent-Type: {content_type}\r\n{framing}",
             self.host, self.authorization
@@ -164,7 +175,13 @@ impl Connection {
         content_type: &str,
         chunks: impl Iterator<Item = Result<Vec<u8>, &'static str>>,
     ) -> Result<Response, &'static str> {
-        let head = self.head("POST", path, None, "Transfer-Encoding: chunked\r\n", content_type);
+        let head = self.head(
+            "POST",
+            path,
+            None,
+            "Transfer-Encoding: chunked\r\n",
+            content_type,
+        );
         let mut written = self
             .reader
             .get_mut()
@@ -325,8 +342,13 @@ mod tests {
         let url = serve(b"HTTP/1.1 204 No Content\r\narcadedb-session-id: AS-1\r\n\r\n\
             HTTP/1.1 200 OK\r\nTransfer-Encoding: chunked\r\n\r\n4\r\n{\"a\"\r\n3\r\n:1}\r\n0\r\n\r\n");
         let mut connection = Connection::open(&url, "root", "pw", Duration::from_secs(5)).unwrap();
-        let begun = connection.request("POST", "/api/v1/begin/db", None, b"").unwrap();
-        assert_eq!((begun.status, begun.session.as_deref(), begun.body.len()), (204, Some("AS-1"), 0));
+        let begun = connection
+            .request("POST", "/api/v1/begin/db", None, b"")
+            .unwrap();
+        assert_eq!(
+            (begun.status, begun.session.as_deref(), begun.body.len()),
+            (204, Some("AS-1"), 0)
+        );
         let next = connection.read_response().unwrap();
         assert_eq!(next.json().unwrap(), serde_json::json!({"a": 1}));
     }
@@ -340,16 +362,32 @@ mod tests {
 
     #[test]
     fn only_lane_tags_reach_the_server() {
-        assert_eq!(tag("arcadedb-12-1760000000000000000"), Ok("arcadedb-12-1760000000000000000"));
-        for invalid in ["", "arcadedb-", "arcadedb-1-", "arcadedb-1-2-3", "neo4j-1-2", "arcadedb-1-2\r\nX: y"] {
+        assert_eq!(
+            tag("arcadedb-12-1760000000000000000"),
+            Ok("arcadedb-12-1760000000000000000")
+        );
+        for invalid in [
+            "",
+            "arcadedb-",
+            "arcadedb-1-",
+            "arcadedb-1-2-3",
+            "neo4j-1-2",
+            "arcadedb-1-2\r\nX: y",
+        ] {
             assert!(tag(invalid).is_err(), "{invalid:?}");
         }
     }
 
     #[test]
     fn only_plain_private_endpoints_are_accepted() {
-        assert_eq!(authority("http://172.18.0.2:2480"), Ok("172.18.0.2:2480".into()));
-        assert_eq!(authority("http://arcadedb:2480/"), Ok("arcadedb:2480".into()));
+        assert_eq!(
+            authority("http://172.18.0.2:2480"),
+            Ok("172.18.0.2:2480".into())
+        );
+        assert_eq!(
+            authority("http://arcadedb:2480/"),
+            Ok("arcadedb:2480".into())
+        );
         for invalid in [
             "https://host:2480",
             "http://host",
