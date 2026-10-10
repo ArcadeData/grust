@@ -63,7 +63,7 @@ def export(directory, output, upstream=ROOT / 'upstream/lsqb', attacks=ROOT / 'a
             checked['internal_network_verified'] = True
         audit.require_matched_sampling(report)
         checked['matched_sampling_verified'] = True
-        # Publication needs server-side cancellation proof (ArcadeData/arcadedb#9680).
+        # Publication needs server-side cancellation proof on every observation.
         audit.require_cancellation(report)
         checked['cancellation_verified'] = True
         checked['query_summaries'] = audit.summarize_measurements(report)

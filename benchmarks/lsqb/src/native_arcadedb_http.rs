@@ -23,6 +23,7 @@ impl Response {
 pub(super) struct Connection {
     host: String,
     authorization: String,
+    tag: Option<String>,
     reader: BufReader<TcpStream>,
 }
 
@@ -42,6 +43,21 @@ pub(super) fn base64(input: &[u8]) -> String {
         }
     }
     output
+}
+
+/// Query tags land in server listings and logs; the lane's own tags are
+/// `arcadedb-<pid>-<nanos>`, so anything else is refused before it is sent.
+pub(super) fn tag(value: &str) -> Result<&str, &'static str> {
+    let valid = value.len() <= 256
+        && value
+            .strip_prefix("arcadedb-")
+            .and_then(|rest| rest.split_once('-'))
+            .is_some_and(|(pid, nanos)| {
+                [pid, nanos]
+                    .iter()
+                    .all(|part| !part.is_empty() && part.bytes().all(|byte| byte.is_ascii_digit()))
+            });
+    if valid { Ok(value) } else { Err("ArcadeDB query tag is invalid") }
 }
 
 /// `http://host:port` only: the server is on a private network without TLS.
@@ -79,8 +95,16 @@ impl Connection {
         Ok(Self {
             host,
             authorization: format!("Basic {}", base64(format!("{user}:{password}").as_bytes())),
+            tag: None,
             reader: BufReader::new(stream),
         })
+    }
+
+    /// Every later request carries `X-ArcadeDB-Query-Tag`, so the server lists
+    /// the statements (and the transaction session begun) under it.
+    pub fn set_tag(&mut self, value: &str) -> Result<(), &'static str> {
+        self.tag = Some(tag(value)?.to_string());
+        Ok(())
     }
 
     fn head(&self, method: &str, path: &str, session: Option<&str>, framing: &str, content_type: &str) -> String {
@@ -90,6 +114,9 @@ impl Connection {
         );
         if let Some(session) = session {
             head.push_str(&format!("arcadedb-session-id: {session}\r\n"));
+        }
+        if let Some(tag) = &self.tag {
+            head.push_str(&format!("X-ArcadeDB-Query-Tag: {tag}\r\n"));
         }
         head.push_str("\r\n");
         head
@@ -309,6 +336,14 @@ mod tests {
         let url = serve(b"HTTP/1.1 200 OK\r\n\r\n{}");
         let mut connection = Connection::open(&url, "root", "pw", Duration::from_secs(5)).unwrap();
         assert!(connection.request("GET", "/", None, b"").is_err());
+    }
+
+    #[test]
+    fn only_lane_tags_reach_the_server() {
+        assert_eq!(tag("arcadedb-12-1760000000000000000"), Ok("arcadedb-12-1760000000000000000"));
+        for invalid in ["", "arcadedb-", "arcadedb-1-", "arcadedb-1-2-3", "neo4j-1-2", "arcadedb-1-2\r\nX: y"] {
+            assert!(tag(invalid).is_err(), "{invalid:?}");
+        }
     }
 
     #[test]

@@ -4,9 +4,10 @@
 Checks counts against the pinned upstream oracle and local attack sources,
 ordered incremental observations, process termination and server recovery.
 Does NOT authenticate container/source provenance or qualify performance claims.
-Server-side cancellation proof is pending ArcadeData/arcadedb#9680: every
-observation records cancellation_verified, and --require-cancellation (which
-the bundle applies) refuses runs where it is false.
+Every observation must carry server-side cancellation proof: its tagged
+statement and transaction session listed and terminated from a separate
+connection until none remains (ArcadeDB `list queries` / `terminate query`,
+`list transactions` / `terminate transaction`, X-ArcadeDB-Query-Tag).
 """
 import argparse
 import csv
@@ -27,7 +28,8 @@ ATTACKS = ('reversed-chain', 'reordered-join', 'split-match', 'optional-fanout',
            'negated-pattern', 'range-expansion', 'cartesian-count', 'union-dedup',
            'path-zero-hop', 'unicode-literal', 'schema-null-probe',
            'parser-comment-trivia', 'resource-edge-scan')
-SCHEMA = 'grust-arcadedb-native-diagnostic-v1'
+SCHEMA = 'grust-arcadedb-native-diagnostic-v2'
+CANCELLATION = 'x-arcadedb-query-tag-list-terminate'
 NETWORK = 'grust-lsqb-arcadedb-qualification'
 # Qualified client source revisions and the image each was built into; filled
 # in when a source is reviewed. Empty: no run is runtime-qualified yet.
@@ -58,7 +60,7 @@ def require_matched_sampling(report):
 def require_cancellation(report):
     """Publication gate: every observation must carry server-side cancellation proof."""
     require(all(item['server_recovery'].get('cancellation_verified') is True for item in report['observations']),
-            'server-side cancellation is unverified (pending ArcadeData/arcadedb#9680)')
+            'server-side cancellation is unverified')
 
 
 def summarize_measurements(report):
@@ -179,12 +181,21 @@ def check_observation(item, expected, seen_tags):
     if outcome != 'timeout':
         require(item['elapsed_ns'] <= 60000 * 1000000, 'late non-timeout result')
     recovery = item.get('server_recovery', {})
-    require(type(recovery.get('cancellation_verified')) is bool, 'cancellation status missing')
-    if recovery['cancellation_verified']:
-        require(type(recovery.get('owned_statements_remaining')) is int and
-                recovery['owned_statements_remaining'] == 0, 'remote work remains')
-    else:
-        require(recovery.get('cancellation_pending') == 'ArcadeData/arcadedb#9680', 'unexplained unverified cancellation')
+    require(recovery.get('cancellation_verified') is True, 'server-side cancellation is unverified')
+    for key in ('owned_statements_remaining', 'owned_sessions_remaining'):
+        require(type(recovery.get(key)) is int and recovery[key] == 0, 'remote work remains')
+    terminated = []
+    for key in ('terminated_statement_ids', 'terminated_session_ids'):
+        ids = recovery.get(key)
+        require(isinstance(ids, list) and len(ids) <= 1 and all(isinstance(x, str) and x for x in ids),
+                'invalid targeted termination identity')
+        terminated += ids
+    require(type(recovery.get('targeted_termination_count')) is int and
+            recovery['targeted_termination_count'] == len(terminated), 'termination count differs')
+    ended = recovery.get('ended_before_termination_ids')
+    require(isinstance(ended, list) and len(ended) + len(terminated) <= 2 and
+            all(isinstance(x, str) and x and x not in terminated for x in ended),
+            'invalid ended-before-termination identity')
     require(type(recovery.get('subsequent_scalar')) is int and recovery['subsequent_scalar'] == 42,
             'next-query recovery missing')
     require(integer(recovery.get('server_recovery_ns')), 'missing recovery timing')
@@ -211,6 +222,7 @@ def validate(directory, upstream, attacks):
         warmups, runs, schedule = 0, 1, [(None, None)]
     require(report.get('client') == 'http/1.1' and isinstance(report.get('server_version'), str),
             'client/server identity missing')
+    require(report.get('cancellation') == CANCELLATION, 'cancellation protocol differs')
     scale = report.get('scale')
     require(scale in DATASETS, 'unknown dataset')
     nodes, edges, people, manifest = DATASETS[scale]
@@ -292,6 +304,7 @@ def validate(directory, upstream, attacks):
             'query_timeout_ms': 60000,
             'warmups_per_query': warmups, 'measurements_per_query': runs,
             'cancellation_verified': all(x['server_recovery']['cancellation_verified'] for x in observations),
+            'targeted_terminations': sum(x['server_recovery']['targeted_termination_count'] for x in observations),
             'measurement_outcomes': {key: sum(x['outcome'] == key for x in measurements)
                                      for key in ('pass', 'mismatch', 'timeout', 'error')},
             'warmup_outcomes': {key: sum(x['outcome'] == key for x in warmup_samples)

@@ -150,11 +150,11 @@ pub(super) fn run(args: &[String]) -> Result<(), &'static str> {
         record(&mut journal, &observation)?;
         observations.push(observation);
     }
-    let mut report = json!({"schema":"grust-arcadedb-native-diagnostic-v1", "complete":false,
+    let mut report = json!({"schema":"grust-arcadedb-native-diagnostic-v2", "complete":false,
         "warning":"These are not LDBC Benchmark Results.","scale":scale,"dataset":identity,
         "client":"http/1.1","server_version":server_version,"load_ns":load_ns,
         "import_ns":loaded.import_ns,"analytical_view_ns":loaded.view_ns,
-        "load_timeout_ms":LOAD_TIMEOUT.as_millis(),"cancellation_pending":super::recovery::PENDING,
+        "load_timeout_ms":LOAD_TIMEOUT.as_millis(),"cancellation":"x-arcadedb-query-tag-list-terminate",
         "observations":observations,"publication_receipt":null});
     if !sampling.legacy {
         report["sampling"] = json!({"warmups_per_query":sampling.warmups,"measurements_per_query":sampling.runs,

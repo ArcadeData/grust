@@ -18,6 +18,11 @@ pub(super) fn probe() -> Result<(), &'static str> {
     if timed.outcome != WorkerOutcome::Timeout || timed.actual_count.is_some() {
         return Err("deadline probe did not force a coordinator timeout");
     }
+    // The abandoned statement was still running: the coordinator must have
+    // terminated it, not merely waited for it.
+    if recovery["terminated_statement_ids"].as_array().map(Vec::len) != Some(1) {
+        return Err("deadline probe statement was not terminated on the server");
+    }
     let (next, next_recovery) = run("RETURN 42 AS count", 5_000)?;
     if next.outcome != WorkerOutcome::Pass || next.actual_count != Some(42) {
         return Err("post-timeout isolated query failed");
@@ -52,6 +57,9 @@ pub(super) fn worker() -> Result<(), &'static str> {
     let (mut connection, settings) =
         super::connect_with_timeout(Duration::from_millis(timeout_ms + 10_000))?;
     let database = settings.database.as_str();
+    // The tag names this sample's session and statement in the server's
+    // running-work listings, so the coordinator can terminate exactly them.
+    connection.set_tag(&token)?;
     // An explicit HTTP transaction session: the query runs in it and is rolled
     // back inside the measured interval, as the reference lane does.
     let begun = connection.request("POST", &session_path("begin", database), None, b"")?;
