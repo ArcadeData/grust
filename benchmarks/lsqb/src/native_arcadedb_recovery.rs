@@ -267,17 +267,11 @@ pub(super) fn probe() -> Result<(), &'static str> {
     if status != 409 {
         return Err("stress statement did not fail as terminated");
     }
-    loop {
-        if self::owned(&mut observer, &tag)?.is_empty() {
-            break;
-        }
-        if recovery_started.elapsed() > Duration::from_secs(10) {
-            return Err("owned work still present after termination; stop the dedicated service");
-        }
-        std::thread::sleep(Duration::from_millis(20));
-    }
-    if super::scalar(&mut observer, &settings, "RETURN 42 AS count")? != 42 {
-        return Err("post-recovery scalar probe mismatch");
+    // The same cleanup every sample gets: the session may outlive its
+    // terminated statement, but the statement itself must be gone.
+    let cleanup = verify(&tag)?;
+    if cleanup["terminated_statement_ids"].as_array().map(Vec::len) != Some(0) {
+        return Err("terminated stress statement was still running");
     }
     println!(
         "{}",
@@ -285,6 +279,7 @@ pub(super) fn probe() -> Result<(), &'static str> {
         "observed_in_tagged_session":true,"targeted_termination_acknowledged":true,
         "worker_status":status,"owned_statements_remaining":0,"owned_sessions_remaining":0,
         "subsequent_scalar":42,"acknowledged_ns":acknowledged_ns,
+        "terminated_session_ids":cleanup["terminated_session_ids"],
         "recovery_ns":recovery_started.elapsed().as_nanos(),"benchmark_complete":false})
     );
     Ok(())

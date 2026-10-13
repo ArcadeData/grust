@@ -17,13 +17,12 @@ pub(super) fn probe() -> Result<(), &'static str> {
     if timed.outcome != WorkerOutcome::Timeout || timed.actual_count.is_some() {
         return Err("deadline probe did not force a coordinator timeout");
     }
-    // The abandoned statement was still running: the coordinator must have
-    // terminated it, not merely waited for it.
-    if recovery["terminated_statement_ids"]
-        .as_array()
-        .map(Vec::len)
-        != Some(1)
-    {
+    // The abandoned statement outlives the deadline by far, so the coordinator
+    // must have ended owned work, not merely waited for it: the statement
+    // itself, or, when the server already stopped it as its client went away,
+    // the transaction session it ran in.
+    let terminated = |key: &str| recovery[key].as_array().map_or(0, Vec::len);
+    if terminated("terminated_statement_ids") + terminated("terminated_session_ids") == 0 {
         return Err("deadline probe statement was not terminated on the server");
     }
     let (next, next_recovery) = run("RETURN 42 AS count", 5_000)?;
