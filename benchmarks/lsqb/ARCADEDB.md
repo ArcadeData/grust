@@ -104,6 +104,17 @@ Probes on the same server:
   terminated (its session ended with it) in 28 ms; the next isolated scalar
   returned 42.
 
+Later ArcadeDB builds (the `26.11.1-SNAPSHOT` of 2026-10-13, `main` at
+`5100e4bf5b`) stop a statement themselves when its HTTP client disconnects, and
+close a terminated statement's session a few seconds after the statement. The
+probes accept both: the recovery probe runs the per-sample cleanup after the
+409 (which terminates the remaining session), and the deadline probe requires
+the coordinator to have terminated the abandoned statement or its session. On
+that build the lane passes 264 of 264 at every scale with cancellation verified;
+in the deadline probe the statement had already ended when the coordinator
+listed it and the session was terminated in 33-35 ms; in the recovery probe the
+whole cleanup took 167-177 ms.
+
 ## Before publication
 
 1. ArcadeDB 26.10.2, released from `main` (which has #9680, merged as
