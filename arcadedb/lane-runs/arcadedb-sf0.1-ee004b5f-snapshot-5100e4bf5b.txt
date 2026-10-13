@@ -1,0 +1,24 @@
+scale 0.1  server 26.11.1-SNAPSHOT (build 5100e4bf5bdd4f4d9f686404fad8ac7a2d16edd8/1791917991022/main)
+load 11.0s (import 9.1s, view 1.8s)  outcomes {'pass': 264}  cancellation verified True  recovery median 0.65 ms
+  q1                         pass  median     10.6 ms
+  q2                         pass  median     20.7 ms
+  q3                         pass  median      6.9 ms
+  q4                         pass  median      6.9 ms
+  q5                         pass  median     21.0 ms
+  q6                         pass  median      8.1 ms
+  q7                         pass  median      7.1 ms
+  q8                         pass  median      8.2 ms
+  q9                         pass  median     23.3 ms
+  a1-reversed-chain          pass  median     39.4 ms
+  a2-reordered-join          pass  median    117.6 ms
+  a3-split-match             pass  median     14.1 ms
+  a4-optional-fanout         pass  median      6.9 ms
+  a5-negated-pattern         pass  median     33.8 ms
+  a6-range-expansion         pass  median      1.7 ms
+  a7-cartesian-count         pass  median      1.2 ms
+  a8-union-dedup             pass  median      1.2 ms
+  a9-path-zero-hop           pass  median      2.2 ms
+  a10-unicode-literal        pass  median      1.2 ms
+  a11-schema-null-probe      pass  median      1.2 ms
+  a12-parser-comment-trivia  pass  median      1.2 ms
+  a13-resource-edge-scan     pass  median      1.1 ms

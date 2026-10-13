@@ -54,6 +54,7 @@ database container at a time, every count validated, Temurin 25.
 | [#9602](https://github.com/ArcadeData/arcadedb/issues/9602) Docker images on Java 21: move to Temurin 25 | yes |
 | [#9608](https://github.com/ArcadeData/arcadedb/issues/9608) a property predicate still disabled the pair-join and anti-join push-downs (Q2, Q8) | yes |
 | [#9680](https://github.com/ArcadeData/arcadedb/issues/9680) list and terminate running queries over HTTP (the lane's cancellation proof) | yes |
+| [#9953](https://github.com/ArcadeData/arcadedb/issues/9953) since the client-disconnect watch, an HTTP statement longer than `arcadedb.network.socketTimeout` (30 s) is killed with no response; a terminated statement's session lingers a few seconds | open |
 
 ## History
 
@@ -66,6 +67,7 @@ Dry runs at SF0.1 (`runs/`), slowest medians:
 | 2026-10-09 22:11 | `3de8af2a5d` (#9598-#9600) | a2 1.5 s, a5 0.66 s, a1 0.06 s |
 | 2026-10-09 23:38 | `2b0a7a636f` (#9608) | a2 0.13 s, everything else at most 0.06 s |
 | 2026-10-10 00:11 | `2b0a7a636f` on Temurin 25 | a2 0.15 s, a5 0.06 s |
+| 2026-10-13 17:54 | published `26.11.1-SNAPSHOT` (`5100e4bf5b`) | 22/22 at every scale; a2 0.13 s (SF0.3 0.43 s); on battery |
 
 The lane (grust's harness, W2/R10, `lane-runs/`), server `main` at
 `2384a46e52` (#9680) on Temurin 25, client `1c11257e`: 264 of 264 samples
@@ -76,6 +78,15 @@ pass at every scale, cancellation verified on every sample.
 | example | 0.4 s | 1.1-2.3 ms | a6 2.6 ms |
 | SF0.1 | 9.9 s | 7.2-24.5 ms | a2 110 ms, a1 38 ms |
 | SF0.3 | 27.8 s | 16.9-79.9 ms | a2 446 ms, a1 140 ms |
+
+The same lane on the published `26.11.1-SNAPSHOT` (`main` at `5100e4bf5b`,
+pinned by digest), client `ee004b5f`, 2026-10-13: 264 of 264 at every scale,
+cancellation verified, audit passes. Taken on battery, so the times are not
+comparable (they are close to the table above: SF0.3 q1-q9 16-77 ms, a2 418 ms).
+That build stops a statement when its HTTP client disconnects and closes the
+statement's session a few seconds after a `terminate query`; the probes were
+adjusted for both (`8bb8d768`) and pass twice each
+(`lane-runs/probes-8bb8d768-snapshot-5100e4bf5b.jsonl`).
 
 ## Before the pull request
 
