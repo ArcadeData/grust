@@ -15,13 +15,13 @@ import sys
 import time
 
 # The pinned server: tag plus the platform image digests its multi-platform
-# index names. Provisional: the 26.11.1-SNAPSHOT published on 2026-10-10
-# (Temurin 25, contains ArcadeDB #9680); replaced by 26.10.2 once released.
+# index names. Provisional: the 26.11.1-SNAPSHOT published on 2026-10-13
+# (main 5100e4bf5b, Temurin 25, contains ArcadeDB #9680); replaced by 26.10.2 once released.
 # Anything else runs only with --diagnostic-server-image, marked unpinned.
 SERVER_IMAGE_TAG = 'arcadedata/arcadedb:26.11.1-SNAPSHOT'
 SERVER_IMAGE_DIGESTS = {
-    'aarch64': 'sha256:49cc61ad0cc1d46d9a4aa5a3efd5a8390d8a55b034e352ee7149e173ee1448d3',
-    'x86_64': 'sha256:d9566c37eb144cb4aa5477cf478c8548614880fd1d5824b400ce2ad61f725a57',
+    'aarch64': 'sha256:ef904a37917d8da686f497d84bc68eaf89ff32dabe14ea1db8de1be95ce51787',
+    'x86_64': 'sha256:bc8c3d68a32fad62336c41e52292a32ac50f7d7d8cd6f7959956ba9ff8f39f7e',
 }
 SERVER_IMAGES = {f'{SERVER_IMAGE_TAG}@{digest}' for digest in SERVER_IMAGE_DIGESTS.values()}
 MEMORY = 6 * 1024**3

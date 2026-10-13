@@ -38,8 +38,8 @@ CLIENT_PROFILES = {}
 # published on 2026-10-10 (Temurin 25, contains ArcadeDB #9680); replaced by
 # 26.10.2 once released.
 SERVER_IMAGES = {
-    'arcadedata/arcadedb:26.11.1-SNAPSHOT@sha256:49cc61ad0cc1d46d9a4aa5a3efd5a8390d8a55b034e352ee7149e173ee1448d3',  # linux/arm64
-    'arcadedata/arcadedb:26.11.1-SNAPSHOT@sha256:d9566c37eb144cb4aa5477cf478c8548614880fd1d5824b400ce2ad61f725a57',  # linux/amd64
+    'arcadedata/arcadedb:26.11.1-SNAPSHOT@sha256:ef904a37917d8da686f497d84bc68eaf89ff32dabe14ea1db8de1be95ce51787',  # linux/arm64
+    'arcadedata/arcadedb:26.11.1-SNAPSHOT@sha256:bc8c3d68a32fad62336c41e52292a32ac50f7d7d8cd6f7959956ba9ff8f39f7e',  # linux/amd64
 }
 
 
