@@ -80,7 +80,7 @@ pass at every scale, cancellation verified on every sample.
 | SF0.3 | 27.8 s | 16.9-79.9 ms | a2 446 ms, a1 140 ms |
 
 The same lane on the published `26.11.1-SNAPSHOT` (`main` at `5100e4bf5b`,
-pinned by digest), client `ee004b5f`, 2026-10-13: 264 of 264 at every scale,
+pinned by digest), client built at `ee004b5f` (lane source `a388574f`; that tools commit was later rebased), 2026-10-13: 264 of 264 at every scale,
 cancellation verified, audit passes. Taken on battery, so the times are not
 comparable (they are close to the table above: SF0.3 q1-q9 16-77 ms, a2 418 ms).
 That build stops a statement when its HTTP client disconnects and closes the
