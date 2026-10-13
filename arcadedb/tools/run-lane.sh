@@ -27,7 +27,7 @@ for scale in $SCALES; do
     "$SERVER_IMAGE" >/dev/null || exit 1
   sleep 45   # the host preflight refuses a server still warming up
   ARCADEDB_PASSWORD=benchmark python3 run-native-arcadedb.py --server grust-lsqb-arcadedb-dev --image "$CLIENT" \
-    --source-revision "$SHA" --output "$out" --scale "$scale" --warmups 2 --runs 10 "${UNPINNED[@]}" | tail -1
+    --source-revision "$SHA" --output "$out" --scale "$scale" --warmups 2 --runs 10 ${UNPINNED[@]+"${UNPINNED[@]}"} | tail -1
   python3 validate-arcadedb-diagnostic.py "$out" --runtime --unpinned --matched-sampling --require-cancellation \
     | python3 -c "import json,sys; r=json.load(sys.stdin); print('$scale', r['outcomes'], 'cancellation', r['cancellation_verified'])"
   python3 "$REPO/arcadedb/tools/summarize.py" "$out"
