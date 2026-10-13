@@ -1,0 +1,163 @@
+{
+ "source": "querygraph/grust benchmarks/lsqb/contracts/1dcae942840f216a83282f45f27e7fe228616e8f51af764689dc4f4fea0de849.json",
+ "lsqb_commit": "242cb2fd31340ca688954cb94794d74c0d5b6f92",
+ "datasets": {
+  "example": {
+   "nodes": 28,
+   "edges": 72,
+   "archive_sha256": null
+  },
+  "0.1": {
+   "nodes": 432235,
+   "edges": 2080404,
+   "archive_sha256": "20b08cfbc0b765bb066135a4c8d99367fb4f0d5c500a63b725e258dcb91b7005"
+  },
+  "0.3": {
+   "nodes": 1179535,
+   "edges": 6183839,
+   "archive_sha256": "4aad6e31047a356d40e8c315916c3fe35a77911024136d69868b39b16f8ccf33"
+  }
+ },
+ "baseline": {
+  "q1": {
+   "example": 8,
+   "0.1": 8773828,
+   "0.3": 45515831
+  },
+  "q2": {
+   "example": 3,
+   "0.1": 82990,
+   "0.3": 277454
+  },
+  "q3": {
+   "example": 6,
+   "0.1": 30456,
+   "0.3": 140736
+  },
+  "q4": {
+   "example": 8,
+   "0.1": 784511,
+   "0.3": 3461431
+  },
+  "q5": {
+   "example": 3,
+   "0.1": 1079722,
+   "0.3": 3703494
+  },
+  "q6": {
+   "example": 8,
+   "0.1": 55607896,
+   "0.3": 285509755
+  },
+  "q7": {
+   "example": 11,
+   "0.1": 1628132,
+   "0.3": 6456925
+  },
+  "q8": {
+   "example": 2,
+   "0.1": 537142,
+   "0.3": 1848731
+  },
+  "q9": {
+   "example": 4,
+   "0.1": 51009398,
+   "0.3": 268837983
+  }
+ },
+ "adversarial": {
+  "a1-reversed-chain": {
+   "example": 8,
+   "0.1": 8773828,
+   "0.3": 45515831
+  },
+  "a2-reordered-join": {
+   "example": 3,
+   "0.1": 82990,
+   "0.3": 277454
+  },
+  "a3-split-match": {
+   "example": 8,
+   "0.1": 784511,
+   "0.3": 3461431
+  },
+  "a4-optional-fanout": {
+   "example": 11,
+   "0.1": 1628132,
+   "0.3": 6456925
+  },
+  "a5-negated-pattern": {
+   "example": 2,
+   "0.1": 537142,
+   "0.3": 1848731
+  },
+  "a6-range-expansion": {
+   "example": 10000,
+   "0.1": 10000,
+   "0.3": 10000
+  },
+  "a7-cartesian-count": {
+   "example": 125,
+   "0.1": 4913000000,
+   "0.3": 59319000000
+  },
+  "a8-union-dedup": {
+   "example": 5,
+   "0.1": 1700,
+   "0.3": 3900
+  },
+  "a9-path-zero-hop": {
+   "example": 5,
+   "0.1": 1700,
+   "0.3": 3900
+  },
+  "a10-unicode-literal": {
+   "example": 5,
+   "0.1": 1700,
+   "0.3": 3900
+  },
+  "a11-schema-null-probe": {
+   "example": 5,
+   "0.1": 1700,
+   "0.3": 3900
+  },
+  "a12-parser-comment-trivia": {
+   "example": 28,
+   "0.1": 432235,
+   "0.3": 1179535
+  },
+  "a13-resource-edge-scan": {
+   "example": 72,
+   "0.1": 2080404,
+   "0.3": 6183839
+  }
+ },
+ "order": {
+  "baseline": [
+   "q1",
+   "q2",
+   "q3",
+   "q4",
+   "q5",
+   "q6",
+   "q7",
+   "q8",
+   "q9"
+  ],
+  "adversarial": [
+   "a1-reversed-chain",
+   "a2-reordered-join",
+   "a3-split-match",
+   "a4-optional-fanout",
+   "a5-negated-pattern",
+   "a6-range-expansion",
+   "a7-cartesian-count",
+   "a8-union-dedup",
+   "a9-path-zero-hop",
+   "a10-unicode-literal",
+   "a11-schema-null-probe",
+   "a12-parser-comment-trivia",
+   "a13-resource-edge-scan"
+  ]
+ }
+}

@@ -1,0 +1,341 @@
+{
+ "scale": "0.3",
+ "image": "arcadedb-bench:3de8af2a5d-jvm",
+ "image_id": "sha256:c6aefccbaed871675a033186fe2aee587a9c362f1620ba0b210e609d88151aeb",
+ "heap": "4g",
+ "gav": true,
+ "limits": "8 CPU, 6 GiB, no swap",
+ "deadline_s": 60,
+ "warmups": 2,
+ "reps": 10,
+ "skip_after_timeouts": 2,
+ "started": "20261009-221236",
+ "warning": "Local dry run. These are not LDBC Benchmark Results.",
+ "ready_s": 1.0650718212127686,
+ "load_s": 16.824472542,
+ "gav_s": 6.587591416999999,
+ "nodes": 1179535,
+ "edges": 6183839,
+ "counts_ok": true,
+ "batch": {
+  "verticesCreated": 1179535,
+  "edgesCreated": 6183839,
+  "elapsedMs": 16563,
+  "bytesRead": 747646918,
+  "linesRead": 7363374,
+  "linesSkipped": 0,
+  "idMappingOmitted": true,
+  "idMappingSize": 1179535
+ },
+ "peak_container_mib": 4771,
+ "summary": [
+  {
+   "query": "q1",
+   "suite": "baseline",
+   "expected": 45515831,
+   "got": 45515831,
+   "outcomes": [
+    "ok"
+   ],
+   "measured_ok": 10,
+   "measured": 10,
+   "median_s": 0.052253771,
+   "min_s": 0.046144124999999994,
+   "max_s": 0.05424337500000001
+  },
+  {
+   "query": "q2",
+   "suite": "baseline",
+   "expected": 277454,
+   "got": 277454,
+   "outcomes": [
+    "ok"
+   ],
+   "measured_ok": 10,
+   "measured": 10,
+   "median_s": 0.07731731250000001,
+   "min_s": 0.07598625,
+   "max_s": 0.082942125
+  },
+  {
+   "query": "q3",
+   "suite": "baseline",
+   "expected": 140736,
+   "got": 140736,
+   "outcomes": [
+    "ok"
+   ],
+   "measured_ok": 10,
+   "measured": 10,
+   "median_s": 0.033066895500000006,
+   "min_s": 0.02729920899999999,
+   "max_s": 0.034648124999999974
+  },
+  {
+   "query": "q4",
+   "suite": "baseline",
+   "expected": 3461431,
+   "got": 3461431,
+   "outcomes": [
+    "ok"
+   ],
+   "measured_ok": 10,
+   "measured": 10,
+   "median_s": 0.034616520500000005,
+   "min_s": 0.030645333999999996,
+   "max_s": 0.03778875000000001
+  },
+  {
+   "query": "q5",
+   "suite": "baseline",
+   "expected": 3703494,
+   "got": 3703494,
+   "outcomes": [
+    "ok"
+   ],
+   "measured_ok": 10,
+   "measured": 10,
+   "median_s": 0.09664772899999999,
+   "min_s": 0.08908724999999999,
+   "max_s": 0.12159100000000003
+  },
+  {
+   "query": "q6",
+   "suite": "baseline",
+   "expected": 285509755,
+   "got": 285509755,
+   "outcomes": [
+    "ok"
+   ],
+   "measured_ok": 10,
+   "measured": 10,
+   "median_s": 0.04619145849999999,
+   "min_s": 0.04123370800000001,
+   "max_s": 0.054034207999999986
+  },
+  {
+   "query": "q7",
+   "suite": "baseline",
+   "expected": 6456925,
+   "got": 6456925,
+   "outcomes": [
+    "ok"
+   ],
+   "measured_ok": 10,
+   "measured": 10,
+   "median_s": 0.0337878335,
+   "min_s": 0.029885582999999993,
+   "max_s": 0.036236667
+  },
+  {
+   "query": "q8",
+   "suite": "baseline",
+   "expected": 1848731,
+   "got": 1848731,
+   "outcomes": [
+    "ok"
+   ],
+   "measured_ok": 10,
+   "measured": 10,
+   "median_s": 0.04941989549999999,
+   "min_s": 0.045225125000000005,
+   "max_s": 0.06928112500000003
+  },
+  {
+   "query": "q9",
+   "suite": "baseline",
+   "expected": 268837983,
+   "got": 268837983,
+   "outcomes": [
+    "ok"
+   ],
+   "measured_ok": 10,
+   "measured": 10,
+   "median_s": 0.1111704375,
+   "min_s": 0.10558133299999999,
+   "max_s": 0.115910542
+  },
+  {
+   "query": "a1-reversed-chain",
+   "suite": "adversarial",
+   "expected": 45515831,
+   "got": 45515831,
+   "outcomes": [
+    "ok"
+   ],
+   "measured_ok": 10,
+   "measured": 10,
+   "median_s": 0.16336685450000002,
+   "min_s": 0.156483875,
+   "max_s": 0.254060917
+  },
+  {
+   "query": "a2-reordered-join",
+   "suite": "adversarial",
+   "expected": 277454,
+   "got": 277454,
+   "outcomes": [
+    "ok"
+   ],
+   "measured_ok": 10,
+   "measured": 10,
+   "median_s": 8.747297771,
+   "min_s": 8.207446375,
+   "max_s": 12.061478375
+  },
+  {
+   "query": "a3-split-match",
+   "suite": "adversarial",
+   "expected": 3461431,
+   "got": 3461431,
+   "outcomes": [
+    "ok"
+   ],
+   "measured_ok": 10,
+   "measured": 10,
+   "median_s": 0.06958368799999999,
+   "min_s": 0.06005133300000001,
+   "max_s": 0.07146524999999998
+  },
+  {
+   "query": "a4-optional-fanout",
+   "suite": "adversarial",
+   "expected": 6456925,
+   "got": 6456925,
+   "outcomes": [
+    "ok"
+   ],
+   "measured_ok": 10,
+   "measured": 10,
+   "median_s": 0.03195950000000001,
+   "min_s": 0.026152792000000008,
+   "max_s": 0.033419292
+  },
+  {
+   "query": "a5-negated-pattern",
+   "suite": "adversarial",
+   "expected": 1848731,
+   "got": 1848731,
+   "outcomes": [
+    "ok"
+   ],
+   "measured_ok": 10,
+   "measured": 10,
+   "median_s": 2.072558542,
+   "min_s": 2.02763675,
+   "max_s": 2.345756792
+  },
+  {
+   "query": "a6-range-expansion",
+   "suite": "adversarial",
+   "expected": 10000,
+   "got": 10000,
+   "outcomes": [
+    "ok"
+   ],
+   "measured_ok": 10,
+   "measured": 10,
+   "median_s": 0.009996750500000005,
+   "min_s": 0.008951792000000014,
+   "max_s": 0.010513833
+  },
+  {
+   "query": "a7-cartesian-count",
+   "suite": "adversarial",
+   "expected": 59319000000,
+   "got": 59319000000,
+   "outcomes": [
+    "ok"
+   ],
+   "measured_ok": 10,
+   "measured": 10,
+   "median_s": 0.010782041499999999,
+   "min_s": 0.008986458000000003,
+   "max_s": 0.011155042000000004
+  },
+  {
+   "query": "a8-union-dedup",
+   "suite": "adversarial",
+   "expected": 3900,
+   "got": 3900,
+   "outcomes": [
+    "ok"
+   ],
+   "measured_ok": 10,
+   "measured": 10,
+   "median_s": 0.010693749999999995,
+   "min_s": 0.010336250000000005,
+   "max_s": 0.012190666000000003
+  },
+  {
+   "query": "a9-path-zero-hop",
+   "suite": "adversarial",
+   "expected": 3900,
+   "got": 3900,
+   "outcomes": [
+    "ok"
+   ],
+   "measured_ok": 10,
+   "measured": 10,
+   "median_s": 0.013587979,
+   "min_s": 0.011816583000000005,
+   "max_s": 0.015781416999999992
+  },
+  {
+   "query": "a10-unicode-literal",
+   "suite": "adversarial",
+   "expected": 3900,
+   "got": 3900,
+   "outcomes": [
+    "ok"
+   ],
+   "measured_ok": 10,
+   "measured": 10,
+   "median_s": 0.011995687499999998,
+   "min_s": 0.009069582999999992,
+   "max_s": 0.012962500000000002
+  },
+  {
+   "query": "a11-schema-null-probe",
+   "suite": "adversarial",
+   "expected": 3900,
+   "got": 3900,
+   "outcomes": [
+    "ok"
+   ],
+   "measured_ok": 10,
+   "measured": 10,
+   "median_s": 0.012395250500000003,
+   "min_s": 0.011702917000000007,
+   "max_s": 0.01324525
+  },
+  {
+   "query": "a12-parser-comment-trivia",
+   "suite": "adversarial",
+   "expected": 1179535,
+   "got": 1179535,
+   "outcomes": [
+    "ok"
+   ],
+   "measured_ok": 10,
+   "measured": 10,
+   "median_s": 0.009869542000000002,
+   "min_s": 0.009389291999999994,
+   "max_s": 0.010377374999999994
+  },
+  {
+   "query": "a13-resource-edge-scan",
+   "suite": "adversarial",
+   "expected": 6183839,
+   "got": 6183839,
+   "outcomes": [
+    "ok"
+   ],
+   "measured_ok": 10,
+   "measured": 10,
+   "median_s": 0.009845624999999997,
+   "min_s": 0.007858041999999996,
+   "max_s": 0.011294582999999997
+  }
+ ]
+}

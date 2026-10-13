@@ -1,0 +1,19 @@
+# ArcadeDB server image on Temurin 25, for testing an engine commit before it is
+# published (the published images use the same base from 26.10.2 on). Mirrors
+# package/src/main/docker/Dockerfile of ArcadeDB, base image only changed.
+# Build context: package/target/arcadedb-<version>.dir of an ArcadeDB checkout.
+FROM eclipse-temurin:25-alpine@sha256:3fd2d245c4e0eba615fe366a71b8bd25f5db7104f53e4026b24bf508b880bd2a
+
+ENV ARCADEDB_OPTS_GC="-XX:+UseZGC"
+ENV ARCADEDB_OPTS_MEMORY="-XX:MaxRAMPercentage=75"
+
+RUN apk -U upgrade && rm -rf /var/cache/apk/*
+RUN adduser -D -h /home/arcadedb -s /bin/sh arcadedb
+WORKDIR /home/arcadedb
+USER arcadedb
+COPY --chown=arcadedb:arcadedb ./arcadedb-* ./
+RUN chmod +x ./bin/*.sh
+
+VOLUME [ "/home/arcadedb/config", "/home/arcadedb/databases", "/home/arcadedb/replication", "/home/arcadedb/backups", "/home/arcadedb/log" ]
+EXPOSE 2480
+CMD ["./bin/server.sh"]

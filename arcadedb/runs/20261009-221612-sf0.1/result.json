@@ -1,0 +1,47 @@
+{
+ "scale": "0.1",
+ "image": "arcadedb-bench:3de8af2a5d-jvm",
+ "image_id": "sha256:c6aefccbaed871675a033186fe2aee587a9c362f1620ba0b210e609d88151aeb",
+ "heap": "4g",
+ "gav": true,
+ "limits": "8 CPU, 6 GiB, no swap",
+ "deadline_s": 60,
+ "warmups": 0,
+ "reps": 1,
+ "skip_after_timeouts": 0,
+ "started": "20261009-221612",
+ "warning": "Local dry run. These are not LDBC Benchmark Results.",
+ "ready_s": 1.0536470413208008,
+ "load_s": 7.443480292,
+ "gav_s": 1.5627720409999988,
+ "nodes": 432235,
+ "edges": 2080404,
+ "counts_ok": true,
+ "batch": {
+  "verticesCreated": 432235,
+  "edgesCreated": 2080404,
+  "elapsedMs": 7163,
+  "bytesRead": 254129134,
+  "linesRead": 2512639,
+  "linesSkipped": 0,
+  "idMappingOmitted": true,
+  "idMappingSize": 432235
+ },
+ "peak_container_mib": 4365,
+ "summary": [
+  {
+   "query": "q1",
+   "suite": "baseline",
+   "expected": 8773828,
+   "got": 8773828,
+   "outcomes": [
+    "ok"
+   ],
+   "measured_ok": 1,
+   "measured": 1,
+   "median_s": 0.151579334,
+   "min_s": 0.151579334,
+   "max_s": 0.151579334
+  }
+ ]
+}
