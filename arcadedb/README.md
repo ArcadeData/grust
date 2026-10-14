@@ -54,7 +54,7 @@ database container at a time, every count validated, Temurin 25.
 | [#9602](https://github.com/ArcadeData/arcadedb/issues/9602) Docker images on Java 21: move to Temurin 25 | yes |
 | [#9608](https://github.com/ArcadeData/arcadedb/issues/9608) a property predicate still disabled the pair-join and anti-join push-downs (Q2, Q8) | yes |
 | [#9680](https://github.com/ArcadeData/arcadedb/issues/9680) list and terminate running queries over HTTP (the lane's cancellation proof) | yes |
-| [#9953](https://github.com/ArcadeData/arcadedb/issues/9953) since the client-disconnect watch, an HTTP statement longer than `arcadedb.network.socketTimeout` (30 s) is killed with no response; a terminated statement's session lingers a few seconds | open |
+| [#9953](https://github.com/ArcadeData/arcadedb/issues/9953) since the client-disconnect watch, an HTTP statement longer than `arcadedb.network.socketTimeout` (30 s) was killed with no response (the session left open after `terminate query` on a read is intended; the answer now carries `sessionId`/`sessionOpen`) | yes (#10010) |
 
 ## History
 
@@ -87,6 +87,11 @@ That build stops a statement when its HTTP client disconnects and closes the
 statement's session a few seconds after a `terminate query`; the probes were
 adjusted for both (`8bb8d768`) and pass twice each
 (`lane-runs/probes-8bb8d768-snapshot-5100e4bf5b.jsonl`).
+
+On AC power, 2026-10-14, server built from `main` at `620cb7c94d` (#9953 fixed
+by #10010) on Temurin 25, client `94be618c`: 264 of 264 at every scale,
+cancellation verified, both probes pass. Times equal the `2384a46e52` table
+within noise (SF0.3 q1-q9 16.3-77.4 ms, a2 446 ms, a1 140 ms; load 27.7 s).
 
 ## Before the pull request
 
