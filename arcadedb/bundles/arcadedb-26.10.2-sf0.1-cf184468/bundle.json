@@ -1,0 +1,59 @@
+{
+  "files": [
+    {
+      "bytes": 10362,
+      "path": "audit.json",
+      "sha256": "a19488e66d8307ba9f21def30bfd2256b08e2cc0b0dc9cab7fd6e87b44d63847"
+    },
+    {
+      "bytes": 1082,
+      "path": "client-after.json",
+      "sha256": "a7bbb2c2a4ffca56773b18d28b21457fedbd48b3016c19698a1db08ec5f767eb"
+    },
+    {
+      "bytes": 1063,
+      "path": "client-before.json",
+      "sha256": "1ec4e17fd0af7f0157b51715ac9e232dabf88196d15de4f8c69b88d73000dc8a"
+    },
+    {
+      "bytes": 1781,
+      "path": "invocation.json",
+      "sha256": "bb84cb6ec7a3907617b63864fee4ae5e78172ee10ac3bd279827b2f7db97d252"
+    },
+    {
+      "bytes": 137,
+      "path": "network-before.json",
+      "sha256": "4d492afffc16888393e3e7f0c468ad3b94712ca39af49a77374be67c49820dfa"
+    },
+    {
+      "bytes": 306280,
+      "path": "result/diagnostic.json",
+      "sha256": "8b8665d7e808227742a28d0aa1824fdeefbb8630cf184b2de2e5a8e94d6d631d"
+    },
+    {
+      "bytes": 292445,
+      "path": "result/observations.jsonl",
+      "sha256": "ca9e0dbc6c7cea7d9d5a254034c832488e70e35d2d03ee0d28a5342f4a0e7c23"
+    },
+    {
+      "bytes": 689,
+      "path": "server-after.json",
+      "sha256": "d2b0de16d8d752703bac46dc9a00986bd608a924c3063417e95de630abb14711"
+    },
+    {
+      "bytes": 689,
+      "path": "server-before.json",
+      "sha256": "d2b0de16d8d752703bac46dc9a00986bd608a924c3063417e95de630abb14711"
+    },
+    {
+      "bytes": 337,
+      "path": "watchdog.json",
+      "sha256": "4c532dbd8c56db1ee894298b6691bdf0d2136763aa4c603f915dc8011e534395"
+    }
+  ],
+  "publication_qualified": false,
+  "scale": "0.1",
+  "schema": "grust-native-arcadedb-evidence-bundle-v1",
+  "source_revision": "cf18446882cd9a629e86715c6bb915625f30b708",
+  "track": "native-arcadedb"
+}

@@ -1,0 +1,518 @@
+{
+  "cancellation_verified": true,
+  "diagnostic_verified": true,
+  "internal_network_verified": true,
+  "matched_sampling_verified": true,
+  "measurement_outcomes": {
+    "error": 0,
+    "mismatch": 0,
+    "pass": 220,
+    "timeout": 0
+  },
+  "measurements_per_query": 10,
+  "outcomes": {
+    "error": 0,
+    "mismatch": 0,
+    "pass": 264,
+    "timeout": 0
+  },
+  "publication_qualified": false,
+  "query_summaries": [
+    {
+      "id": "q1",
+      "measurement_elapsed_ns": [
+        1032583,
+        1207959,
+        1201375,
+        1405792,
+        1203667,
+        1269666,
+        1137750,
+        1114125,
+        1301375,
+        1100625
+      ],
+      "measurement_samples": 10,
+      "suite": "baseline",
+      "timing_summary": {
+        "max_ns": 1405792,
+        "median_ns": 1202521.0,
+        "min_ns": 1032583
+      }
+    },
+    {
+      "id": "q2",
+      "measurement_elapsed_ns": [
+        2139334,
+        1497250,
+        2225292,
+        2461042,
+        1270458,
+        1163000,
+        1377959,
+        1137875,
+        1095167,
+        1128375
+      ],
+      "measurement_samples": 10,
+      "suite": "baseline",
+      "timing_summary": {
+        "max_ns": 2461042,
+        "median_ns": 1324208.5,
+        "min_ns": 1095167
+      }
+    },
+    {
+      "id": "q3",
+      "measurement_elapsed_ns": [
+        1194667,
+        1173125,
+        1046500,
+        1240542,
+        1146833,
+        1336667,
+        1137792,
+        1174417,
+        1422917,
+        1307333
+      ],
+      "measurement_samples": 10,
+      "suite": "baseline",
+      "timing_summary": {
+        "max_ns": 1422917,
+        "median_ns": 1184542.0,
+        "min_ns": 1046500
+      }
+    },
+    {
+      "id": "q4",
+      "measurement_elapsed_ns": [
+        1216542,
+        1080875,
+        1509416,
+        1337375,
+        1338125,
+        1460833,
+        1479125,
+        1295375,
+        1302333,
+        1185292
+      ],
+      "measurement_samples": 10,
+      "suite": "baseline",
+      "timing_summary": {
+        "max_ns": 1509416,
+        "median_ns": 1319854.0,
+        "min_ns": 1080875
+      }
+    },
+    {
+      "id": "q5",
+      "measurement_elapsed_ns": [
+        1193375,
+        1114291,
+        1478250,
+        1271416,
+        1330750,
+        1359666,
+        1288625,
+        1188292,
+        1229375,
+        1495792
+      ],
+      "measurement_samples": 10,
+      "suite": "baseline",
+      "timing_summary": {
+        "max_ns": 1495792,
+        "median_ns": 1280020.5,
+        "min_ns": 1114291
+      }
+    },
+    {
+      "id": "q6",
+      "measurement_elapsed_ns": [
+        1110583,
+        1328750,
+        1076334,
+        1216416,
+        1297084,
+        1431334,
+        1124500,
+        1216875,
+        1141208,
+        1297917
+      ],
+      "measurement_samples": 10,
+      "suite": "baseline",
+      "timing_summary": {
+        "max_ns": 1431334,
+        "median_ns": 1216645.5,
+        "min_ns": 1076334
+      }
+    },
+    {
+      "id": "q7",
+      "measurement_elapsed_ns": [
+        1224250,
+        1267083,
+        1414459,
+        1186208,
+        1271042,
+        1349792,
+        991625,
+        1159584,
+        1315416,
+        1291834
+      ],
+      "measurement_samples": 10,
+      "suite": "baseline",
+      "timing_summary": {
+        "max_ns": 1414459,
+        "median_ns": 1269062.5,
+        "min_ns": 991625
+      }
+    },
+    {
+      "id": "q8",
+      "measurement_elapsed_ns": [
+        1161166,
+        1190333,
+        1294084,
+        1476500,
+        1097875,
+        1407084,
+        1218500,
+        1120792,
+        1069500,
+        1287584
+      ],
+      "measurement_samples": 10,
+      "suite": "baseline",
+      "timing_summary": {
+        "max_ns": 1476500,
+        "median_ns": 1204416.5,
+        "min_ns": 1069500
+      }
+    },
+    {
+      "id": "q9",
+      "measurement_elapsed_ns": [
+        1442209,
+        1249167,
+        1124208,
+        1087750,
+        1201666,
+        1245958,
+        1205417,
+        1353959,
+        1285875,
+        1182625
+      ],
+      "measurement_samples": 10,
+      "suite": "baseline",
+      "timing_summary": {
+        "max_ns": 1442209,
+        "median_ns": 1225687.5,
+        "min_ns": 1087750
+      }
+    },
+    {
+      "id": "a1-reversed-chain",
+      "measurement_elapsed_ns": [
+        1199792,
+        1221083,
+        1278000,
+        1138833,
+        1170958,
+        1370250,
+        1228583,
+        1289666,
+        1289542,
+        1485500
+      ],
+      "measurement_samples": 10,
+      "suite": "adversarial",
+      "timing_summary": {
+        "max_ns": 1485500,
+        "median_ns": 1253291.5,
+        "min_ns": 1138833
+      }
+    },
+    {
+      "id": "a2-reordered-join",
+      "measurement_elapsed_ns": [
+        1238625,
+        1363167,
+        1170375,
+        1352458,
+        1370000,
+        1142416,
+        1261000,
+        1133750,
+        1329209,
+        1205209
+      ],
+      "measurement_samples": 10,
+      "suite": "adversarial",
+      "timing_summary": {
+        "max_ns": 1370000,
+        "median_ns": 1249812.5,
+        "min_ns": 1133750
+      }
+    },
+    {
+      "id": "a3-split-match",
+      "measurement_elapsed_ns": [
+        1189916,
+        1105667,
+        1151417,
+        1331167,
+        1246375,
+        1258291,
+        1366000,
+        1129792,
+        1052959,
+        1370625
+      ],
+      "measurement_samples": 10,
+      "suite": "adversarial",
+      "timing_summary": {
+        "max_ns": 1370625,
+        "median_ns": 1218145.5,
+        "min_ns": 1052959
+      }
+    },
+    {
+      "id": "a4-optional-fanout",
+      "measurement_elapsed_ns": [
+        1151334,
+        1131125,
+        1373500,
+        1347000,
+        1498875,
+        1440417,
+        1240417,
+        1370959,
+        1520583,
+        1183917
+      ],
+      "measurement_samples": 10,
+      "suite": "adversarial",
+      "timing_summary": {
+        "max_ns": 1520583,
+        "median_ns": 1358979.5,
+        "min_ns": 1131125
+      }
+    },
+    {
+      "id": "a5-negated-pattern",
+      "measurement_elapsed_ns": [
+        1380917,
+        1475834,
+        1187250,
+        1223291,
+        1188375,
+        1144250,
+        1425959,
+        1301583,
+        1438666,
+        1176042
+      ],
+      "measurement_samples": 10,
+      "suite": "adversarial",
+      "timing_summary": {
+        "max_ns": 1475834,
+        "median_ns": 1262437.0,
+        "min_ns": 1144250
+      }
+    },
+    {
+      "id": "a6-range-expansion",
+      "measurement_elapsed_ns": [
+        3600125,
+        2567042,
+        2308708,
+        2212708,
+        2329416,
+        2372583,
+        2288541,
+        3816417,
+        2771333,
+        2559833
+      ],
+      "measurement_samples": 10,
+      "suite": "adversarial",
+      "timing_summary": {
+        "max_ns": 3816417,
+        "median_ns": 2466208.0,
+        "min_ns": 2212708
+      }
+    },
+    {
+      "id": "a7-cartesian-count",
+      "measurement_elapsed_ns": [
+        1056541,
+        1169000,
+        1074375,
+        1202417,
+        1348375,
+        1393875,
+        1222375,
+        1388583,
+        1457250,
+        1247625
+      ],
+      "measurement_samples": 10,
+      "suite": "adversarial",
+      "timing_summary": {
+        "max_ns": 1457250,
+        "median_ns": 1235000.0,
+        "min_ns": 1056541
+      }
+    },
+    {
+      "id": "a8-union-dedup",
+      "measurement_elapsed_ns": [
+        1191542,
+        1144250,
+        1303083,
+        1172083,
+        1135583,
+        1215666,
+        1011542,
+        1111167,
+        1124041,
+        1482292
+      ],
+      "measurement_samples": 10,
+      "suite": "adversarial",
+      "timing_summary": {
+        "max_ns": 1482292,
+        "median_ns": 1158166.5,
+        "min_ns": 1011542
+      }
+    },
+    {
+      "id": "a9-path-zero-hop",
+      "measurement_elapsed_ns": [
+        1195833,
+        1373708,
+        1297917,
+        1072709,
+        1203875,
+        1087708,
+        1203042,
+        1371417,
+        1248750,
+        1229042
+      ],
+      "measurement_samples": 10,
+      "suite": "adversarial",
+      "timing_summary": {
+        "max_ns": 1373708,
+        "median_ns": 1216458.5,
+        "min_ns": 1072709
+      }
+    },
+    {
+      "id": "a10-unicode-literal",
+      "measurement_elapsed_ns": [
+        1184500,
+        1182750,
+        1177084,
+        1392666,
+        1310750,
+        1126708,
+        1363625,
+        1205583,
+        1042208,
+        1419083
+      ],
+      "measurement_samples": 10,
+      "suite": "adversarial",
+      "timing_summary": {
+        "max_ns": 1419083,
+        "median_ns": 1195041.5,
+        "min_ns": 1042208
+      }
+    },
+    {
+      "id": "a11-schema-null-probe",
+      "measurement_elapsed_ns": [
+        1150250,
+        1315125,
+        1171500,
+        1218375,
+        1235000,
+        1379834,
+        1170417,
+        1077917,
+        1224333,
+        1325000
+      ],
+      "measurement_samples": 10,
+      "suite": "adversarial",
+      "timing_summary": {
+        "max_ns": 1379834,
+        "median_ns": 1221354.0,
+        "min_ns": 1077917
+      }
+    },
+    {
+      "id": "a12-parser-comment-trivia",
+      "measurement_elapsed_ns": [
+        1071958,
+        1144709,
+        1357709,
+        1409417,
+        1546583,
+        1231417,
+        1191000,
+        1432750,
+        1228083,
+        1485500
+      ],
+      "measurement_samples": 10,
+      "suite": "adversarial",
+      "timing_summary": {
+        "max_ns": 1546583,
+        "median_ns": 1294563.0,
+        "min_ns": 1071958
+      }
+    },
+    {
+      "id": "a13-resource-edge-scan",
+      "measurement_elapsed_ns": [
+        1082667,
+        1271833,
+        1117500,
+        1398708,
+        1401084,
+        1163667,
+        1334875,
+        1107417,
+        1504834,
+        1235584
+      ],
+      "measurement_samples": 10,
+      "suite": "adversarial",
+      "timing_summary": {
+        "max_ns": 1504834,
+        "median_ns": 1253708.5,
+        "min_ns": 1082667
+      }
+    }
+  ],
+  "query_timeout_ms": 60000,
+  "runtime_verified": true,
+  "sampling_order": "suite-major-phase-major-rotating",
+  "scale": "example",
+  "targeted_terminations": 0,
+  "warmup_outcomes": {
+    "error": 0,
+    "mismatch": 0,
+    "pass": 44,
+    "timeout": 0
+  },
+  "warmups_per_query": 2
+}

@@ -19,6 +19,7 @@ Nothing here is an LDBC Benchmark Result.
 | `tools/run-lane.sh` | Run the real lane (grust's harness, `run-native-arcadedb.py`) at example, SF0.1 and SF0.3 with W2/R10, a fresh server per scale, and audit each run with the cancellation gate. |
 | `tools/summarize.py` | Load, outcomes and per-query medians of a lane run, optionally against a previous run. |
 | `lane-runs/` | Summaries of the lane runs and the termination/deadline probes. |
+| `bundles/` | The frozen evidence bundles of the qualified 26.10.2 runs (`bundle-native-arcadedb.py` output, one folder per scale). |
 
 ## Running
 
@@ -88,6 +89,18 @@ statement's session a few seconds after a `terminate query`; the probes were
 adjusted for both (`8bb8d768`) and pass twice each
 (`lane-runs/probes-8bb8d768-snapshot-5100e4bf5b.jsonl`).
 
+**Qualified, 2026-10-15:** ArcadeDB 26.10.2 (pinned by digest), client
+`cf184468` (in `CLIENT_PROFILES`), AC power, each run started on a quiet host:
+264 of 264 at every scale, pinned audit passes, cancellation verified, zero
+targeted terminations; both probes pass. Bundles in `bundles/`, manifest hashes
+in `benchmarks/lsqb/ARCADEDB.md`.
+
+| Scale | Load | q1-q9 medians | Slowest attacks |
+|---|---|---|---|
+| example | 0.4 s | 1.2-1.3 ms | a6 2.5 ms |
+| SF0.1 | 9.8 s | 6.9-23.3 ms | a2 106 ms, a1 37 ms |
+| SF0.3 | 27.7 s | 16.4-76.8 ms | a2 451 ms, a1 132 ms, a5 130 ms |
+
 On AC power, 2026-10-14, server built from `main` at `620cb7c94d` (#9953 fixed
 by #10010) on Temurin 25, client `94be618c`: 264 of 264 at every scale,
 cancellation verified, both probes pass. Times equal the `2384a46e52` table
@@ -95,9 +108,6 @@ within noise (SF0.3 q1-q9 16.3-77.4 ms, a2 446 ms, a1 140 ms; load 27.7 s).
 
 ## Before the pull request
 
-1. ArcadeDB 26.10.2 (released from `main`, so it contains #9680): replace the
-   provisional `26.11.1-SNAPSHOT` digests in `run-native-arcadedb.py` and
-   `validate-arcadedb-diagnostic.py`.
-2. Pin the reviewed client source and image in `CLIENT_PROFILES`.
-3. Clean runs at example, SF0.1 and SF0.3, then `bundle-native-arcadedb.py`.
-4. Pull request from `arcadedb-lane`.
+Done: 26.10.2 pinned (`cf184468`), client qualified and bundles frozen
+(`b6a65552`). Next: the pull request from `arcadedb-lane` to `querygraph/grust`,
+then independent site admission of the bundles.

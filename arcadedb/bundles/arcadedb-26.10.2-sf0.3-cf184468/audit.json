@@ -1,0 +1,518 @@
+{
+  "cancellation_verified": true,
+  "diagnostic_verified": true,
+  "internal_network_verified": true,
+  "matched_sampling_verified": true,
+  "measurement_outcomes": {
+    "error": 0,
+    "mismatch": 0,
+    "pass": 220,
+    "timeout": 0
+  },
+  "measurements_per_query": 10,
+  "outcomes": {
+    "error": 0,
+    "mismatch": 0,
+    "pass": 264,
+    "timeout": 0
+  },
+  "publication_qualified": false,
+  "query_summaries": [
+    {
+      "id": "q1",
+      "measurement_elapsed_ns": [
+        29604750,
+        25626750,
+        26048583,
+        25425458,
+        26035500,
+        25822167,
+        25750333,
+        25895041,
+        25656333,
+        26292417
+      ],
+      "measurement_samples": 10,
+      "suite": "baseline",
+      "timing_summary": {
+        "max_ns": 29604750,
+        "median_ns": 25858604.0,
+        "min_ns": 25425458
+      }
+    },
+    {
+      "id": "q2",
+      "measurement_elapsed_ns": [
+        58884000,
+        56140083,
+        51046208,
+        50919959,
+        59956375,
+        60291125,
+        61658459,
+        60791750,
+        60539625,
+        61284000
+      ],
+      "measurement_samples": 10,
+      "suite": "baseline",
+      "timing_summary": {
+        "max_ns": 61658459,
+        "median_ns": 60123750.0,
+        "min_ns": 50919959
+      }
+    },
+    {
+      "id": "q3",
+      "measurement_elapsed_ns": [
+        18116416,
+        17174791,
+        17424708,
+        17749042,
+        17445875,
+        17110708,
+        17860250,
+        17170542,
+        16854667,
+        18085791
+      ],
+      "measurement_samples": 10,
+      "suite": "baseline",
+      "timing_summary": {
+        "max_ns": 18116416,
+        "median_ns": 17435291.5,
+        "min_ns": 16854667
+      }
+    },
+    {
+      "id": "q4",
+      "measurement_elapsed_ns": [
+        16388916,
+        16247625,
+        15707625,
+        16348750,
+        16441250,
+        16709000,
+        16508667,
+        16139125,
+        16525417,
+        16808250
+      ],
+      "measurement_samples": 10,
+      "suite": "baseline",
+      "timing_summary": {
+        "max_ns": 16808250,
+        "median_ns": 16415083.0,
+        "min_ns": 15707625
+      }
+    },
+    {
+      "id": "q5",
+      "measurement_elapsed_ns": [
+        68618292,
+        70081709,
+        63946000,
+        61905709,
+        62124375,
+        61416667,
+        61799667,
+        61883375,
+        61046542,
+        63091042
+      ],
+      "measurement_samples": 10,
+      "suite": "baseline",
+      "timing_summary": {
+        "max_ns": 70081709,
+        "median_ns": 62015042.0,
+        "min_ns": 61046542
+      }
+    },
+    {
+      "id": "q6",
+      "measurement_elapsed_ns": [
+        20686084,
+        20682375,
+        22963625,
+        20200958,
+        19971292,
+        19500416,
+        20463792,
+        18972833,
+        19760000,
+        25283375
+      ],
+      "measurement_samples": 10,
+      "suite": "baseline",
+      "timing_summary": {
+        "max_ns": 25283375,
+        "median_ns": 20332375.0,
+        "min_ns": 18972833
+      }
+    },
+    {
+      "id": "q7",
+      "measurement_elapsed_ns": [
+        16635167,
+        17300125,
+        18761917,
+        17122209,
+        16769458,
+        16300458,
+        17368667,
+        16346250,
+        16595625,
+        16686041
+      ],
+      "measurement_samples": 10,
+      "suite": "baseline",
+      "timing_summary": {
+        "max_ns": 18761917,
+        "median_ns": 16727749.5,
+        "min_ns": 16300458
+      }
+    },
+    {
+      "id": "q8",
+      "measurement_elapsed_ns": [
+        30917000,
+        26535375,
+        25143751,
+        24994959,
+        27324125,
+        24190875,
+        24570625,
+        25020750,
+        29207334,
+        24868959
+      ],
+      "measurement_samples": 10,
+      "suite": "baseline",
+      "timing_summary": {
+        "max_ns": 30917000,
+        "median_ns": 25082250.5,
+        "min_ns": 24190875
+      }
+    },
+    {
+      "id": "q9",
+      "measurement_elapsed_ns": [
+        76891750,
+        77197083,
+        76746583,
+        77087542,
+        77026584,
+        76471750,
+        76695000,
+        75998875,
+        76461667,
+        79195084
+      ],
+      "measurement_samples": 10,
+      "suite": "baseline",
+      "timing_summary": {
+        "max_ns": 79195084,
+        "median_ns": 76819166.5,
+        "min_ns": 75998875
+      }
+    },
+    {
+      "id": "a1-reversed-chain",
+      "measurement_elapsed_ns": [
+        144919375,
+        127501458,
+        126649625,
+        131110458,
+        139477083,
+        132880292,
+        136692333,
+        130414542,
+        134591250,
+        130343208
+      ],
+      "measurement_samples": 10,
+      "suite": "adversarial",
+      "timing_summary": {
+        "max_ns": 144919375,
+        "median_ns": 131995375.0,
+        "min_ns": 126649625
+      }
+    },
+    {
+      "id": "a2-reordered-join",
+      "measurement_elapsed_ns": [
+        440362917,
+        453531042,
+        447726375,
+        437715542,
+        455674917,
+        469824208,
+        455394792,
+        442130292,
+        442533709,
+        465730709
+      ],
+      "measurement_samples": 10,
+      "suite": "adversarial",
+      "timing_summary": {
+        "max_ns": 469824208,
+        "median_ns": 450628708.5,
+        "min_ns": 437715542
+      }
+    },
+    {
+      "id": "a3-split-match",
+      "measurement_elapsed_ns": [
+        49244209,
+        47849000,
+        47897458,
+        46951250,
+        48184000,
+        47721000,
+        48511458,
+        46699917,
+        47310708,
+        47628708
+      ],
+      "measurement_samples": 10,
+      "suite": "adversarial",
+      "timing_summary": {
+        "max_ns": 49244209,
+        "median_ns": 47785000.0,
+        "min_ns": 46699917
+      }
+    },
+    {
+      "id": "a4-optional-fanout",
+      "measurement_elapsed_ns": [
+        16485500,
+        16826167,
+        16582334,
+        16473542,
+        20416875,
+        16999083,
+        16623792,
+        16505666,
+        17165208,
+        17026958
+      ],
+      "measurement_samples": 10,
+      "suite": "adversarial",
+      "timing_summary": {
+        "max_ns": 20416875,
+        "median_ns": 16724979.5,
+        "min_ns": 16473542
+      }
+    },
+    {
+      "id": "a5-negated-pattern",
+      "measurement_elapsed_ns": [
+        126617459,
+        137085583,
+        129082875,
+        129637333,
+        128963750,
+        135812542,
+        129323250,
+        145000166,
+        130047834,
+        131305833
+      ],
+      "measurement_samples": 10,
+      "suite": "adversarial",
+      "timing_summary": {
+        "max_ns": 145000166,
+        "median_ns": 129842583.5,
+        "min_ns": 126617459
+      }
+    },
+    {
+      "id": "a6-range-expansion",
+      "measurement_elapsed_ns": [
+        2486625,
+        2753250,
+        1114541,
+        2304416,
+        1182167,
+        1469292,
+        2356416,
+        1152042,
+        1097083,
+        1271542
+      ],
+      "measurement_samples": 10,
+      "suite": "adversarial",
+      "timing_summary": {
+        "max_ns": 2753250,
+        "median_ns": 1370417.0,
+        "min_ns": 1097083
+      }
+    },
+    {
+      "id": "a7-cartesian-count",
+      "measurement_elapsed_ns": [
+        1399167,
+        1355417,
+        1450041,
+        1160875,
+        1199000,
+        1447291,
+        1310500,
+        1212792,
+        1386708,
+        1137959
+      ],
+      "measurement_samples": 10,
+      "suite": "adversarial",
+      "timing_summary": {
+        "max_ns": 1450041,
+        "median_ns": 1332958.5,
+        "min_ns": 1137959
+      }
+    },
+    {
+      "id": "a8-union-dedup",
+      "measurement_elapsed_ns": [
+        1137041,
+        1259750,
+        1210792,
+        1178125,
+        1313291,
+        1614542,
+        1114583,
+        1362333,
+        1239083,
+        1175958
+      ],
+      "measurement_samples": 10,
+      "suite": "adversarial",
+      "timing_summary": {
+        "max_ns": 1614542,
+        "median_ns": 1224937.5,
+        "min_ns": 1114583
+      }
+    },
+    {
+      "id": "a9-path-zero-hop",
+      "measurement_elapsed_ns": [
+        3611792,
+        2646292,
+        2283708,
+        2094791,
+        2123167,
+        2540459,
+        2761333,
+        2597542,
+        2753042,
+        2722833
+      ],
+      "measurement_samples": 10,
+      "suite": "adversarial",
+      "timing_summary": {
+        "max_ns": 3611792,
+        "median_ns": 2621917.0,
+        "min_ns": 2094791
+      }
+    },
+    {
+      "id": "a10-unicode-literal",
+      "measurement_elapsed_ns": [
+        2202708,
+        1268083,
+        1145875,
+        1174292,
+        2313167,
+        2574750,
+        1242375,
+        1256458,
+        1323208,
+        1322417
+      ],
+      "measurement_samples": 10,
+      "suite": "adversarial",
+      "timing_summary": {
+        "max_ns": 2574750,
+        "median_ns": 1295250.0,
+        "min_ns": 1145875
+      }
+    },
+    {
+      "id": "a11-schema-null-probe",
+      "measurement_elapsed_ns": [
+        1454917,
+        1334709,
+        1299750,
+        1114375,
+        2335917,
+        1120042,
+        1225083,
+        1008584,
+        1154125,
+        1026084
+      ],
+      "measurement_samples": 10,
+      "suite": "adversarial",
+      "timing_summary": {
+        "max_ns": 2335917,
+        "median_ns": 1189604.0,
+        "min_ns": 1008584
+      }
+    },
+    {
+      "id": "a12-parser-comment-trivia",
+      "measurement_elapsed_ns": [
+        1380750,
+        1428167,
+        1167709,
+        1246417,
+        1371250,
+        1104500,
+        1064333,
+        1236917,
+        1300583,
+        1215166
+      ],
+      "measurement_samples": 10,
+      "suite": "adversarial",
+      "timing_summary": {
+        "max_ns": 1428167,
+        "median_ns": 1241667.0,
+        "min_ns": 1064333
+      }
+    },
+    {
+      "id": "a13-resource-edge-scan",
+      "measurement_elapsed_ns": [
+        1173833,
+        1253292,
+        1417625,
+        1538166,
+        1205666,
+        1159959,
+        1404792,
+        1479958,
+        1324750,
+        1218459
+      ],
+      "measurement_samples": 10,
+      "suite": "adversarial",
+      "timing_summary": {
+        "max_ns": 1538166,
+        "median_ns": 1289021.0,
+        "min_ns": 1159959
+      }
+    }
+  ],
+  "query_timeout_ms": 60000,
+  "runtime_verified": true,
+  "sampling_order": "suite-major-phase-major-rotating",
+  "scale": "0.3",
+  "targeted_terminations": 0,
+  "warmup_outcomes": {
+    "error": 0,
+    "mismatch": 0,
+    "pass": 44,
+    "timeout": 0
+  },
+  "warmups_per_query": 2
+}
