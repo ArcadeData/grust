@@ -34,12 +34,10 @@ NETWORK = 'grust-lsqb-arcadedb-qualification'
 # Qualified client source revisions and the image each was built into; filled
 # in when a source is reviewed. Empty: no run is runtime-qualified yet.
 CLIENT_PROFILES = {}
-# The pinned server's platform images. Provisional: the 26.11.1-SNAPSHOT
-# published on 2026-10-10 (Temurin 25, contains ArcadeDB #9680); replaced by
-# 26.10.2 once released.
+# The pinned server's platform images: ArcadeDB 26.10.2 (Temurin 25).
 SERVER_IMAGES = {
-    'arcadedata/arcadedb:26.11.1-SNAPSHOT@sha256:ef904a37917d8da686f497d84bc68eaf89ff32dabe14ea1db8de1be95ce51787',  # linux/arm64
-    'arcadedata/arcadedb:26.11.1-SNAPSHOT@sha256:bc8c3d68a32fad62336c41e52292a32ac50f7d7d8cd6f7959956ba9ff8f39f7e',  # linux/amd64
+    'arcadedata/arcadedb:26.10.2@sha256:a8d755d0ef09efdaf769765833f15e4ecd15f19bae56f5f94d019bb666e9cbc2',  # linux/arm64
+    'arcadedata/arcadedb:26.10.2@sha256:51303393dab3597317cbe6f364a409a4f81a87ab912e8627e3b8cfd7fbb2c3ac',  # linux/amd64
 }
 
 

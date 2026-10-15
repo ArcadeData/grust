@@ -15,9 +15,8 @@ a Grust adapter. The private harness feature is `arcadedb-native`; the binary is
 
 ## Protocol
 
-- **Server:** the pinned ArcadeDB image (for now `arcadedata/arcadedb:26.11.1-SNAPSHOT`
-  by platform digest, to be replaced by 26.10.2; the
-  runner accepts others only with `--diagnostic-server-image`, and those runs
+- **Server:** the pinned ArcadeDB image (`arcadedata/arcadedb:26.10.2` by
+  platform digest, Temurin 25; the runner accepts others only with `--diagnostic-server-image`, and those runs
   are marked unpinned and cannot be bundled). 8 CPU / 6 GiB without swap, no
   host ports, attached only to the internal `grust-lsqb-arcadedb-qualification`
   network. Image defaults otherwise (heap `-XX:MaxRAMPercentage=75`, ZGC), plus
