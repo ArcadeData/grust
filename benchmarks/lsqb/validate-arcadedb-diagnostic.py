@@ -31,9 +31,11 @@ ATTACKS = ('reversed-chain', 'reordered-join', 'split-match', 'optional-fanout',
 SCHEMA = 'grust-arcadedb-native-diagnostic-v2'
 CANCELLATION = 'x-arcadedb-query-tag-list-terminate'
 NETWORK = 'grust-lsqb-arcadedb-qualification'
-# Qualified client source revisions and the image each was built into; filled
-# in when a source is reviewed. Empty: no run is runtime-qualified yet.
-CLIENT_PROFILES = {}
+# Qualified client source revisions and the image each was built into.
+CLIENT_PROFILES = {
+    'cf18446882cd9a629e86715c6bb915625f30b708':
+        'sha256:7c32b62786151c225d93b57438bb70edd0d4fb6bb3f1c8bdb86f73ec3f315a8a',
+}
 # The pinned server's platform images: ArcadeDB 26.10.2 (Temurin 25).
 SERVER_IMAGES = {
     'arcadedata/arcadedb:26.10.2@sha256:a8d755d0ef09efdaf769765833f15e4ecd15f19bae56f5f94d019bb666e9cbc2',  # linux/arm64

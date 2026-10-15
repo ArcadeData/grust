@@ -1,12 +1,13 @@
 # Native ArcadeDB comparison lane
 
-**Status: diagnostic, not publishable yet.** Counts, sampling, runtime records,
-the coordinator deadline and server-side cancellation all qualify on a server
-built from ArcadeDB `main` and on the published `26.11.1-SNAPSHOT` image, which
-contains the running-statement listing and termination
-([ArcadeData/arcadedb#9680](https://github.com/ArcadeData/arcadedb/issues/9680)).
-The server pin is provisional: that snapshot (2026-10-10, Temurin 25) until the
-26.10.2 release, cut from the same `main`, replaces it.
+**Status: qualified on ArcadeDB 26.10.2, awaiting independent site admission.**
+Counts, sampling, runtime identity, the coordinator deadline and server-side
+cancellation all pass on the pinned `arcadedata/arcadedb:26.10.2` image with
+the qualified client in `CLIENT_PROFILES`; the three bundles below are frozen.
+The release contains the running-statement listing and termination
+([ArcadeData/arcadedb#9680](https://github.com/ArcadeData/arcadedb/issues/9680))
+and the fix for long HTTP statements
+([#9953](https://github.com/ArcadeData/arcadedb/issues/9953)).
 These are not LDBC Benchmark Results.
 
 This is a native engine comparator modelled on the [Neo4j lane](NEO4J.md), not
@@ -75,51 +76,51 @@ python3 benchmarks/lsqb/validate-arcadedb-diagnostic.py benchmarks/lsqb/out/<new
 Each run needs a fresh server (the import refuses an existing database). Let the
 server go idle before starting: the host preflight refuses a busy Docker VM.
 
-## Development runs (unpinned, not publishable)
+## Qualified runs (ArcadeDB 26.10.2)
 
-Client source `1c11257e`, server built from ArcadeDB `main` at `2384a46e52`
-(#9680 merged) on `eclipse-temurin:25-alpine`, one Apple Silicon laptop on AC
-power, `--diagnostic-server-image`. All three passed
-`validate-arcadedb-diagnostic.py --runtime --unpinned --matched-sampling --require-cancellation`:
-264 of 264 samples pass (44 warm-ups, 220 measurements), no mismatch, timeout
-or error, cancellation verified on every sample with nothing left running
-(every sample rolled back on its own, so no targeted termination was needed),
-journal and report identical. The recovery check takes a median 0.6-0.7 ms and
-is outside the measured interval.
+Client source `cf18446882cd9a629e86715c6bb915625f30b708`, client image
+`sha256:7c32b62786151c225d93b57438bb70edd0d4fb6bb3f1c8bdb86f73ec3f315a8a`,
+server `arcadedata/arcadedb:26.10.2` linux/arm64
+(`sha256:a8d755d0ef09efdaf769765833f15e4ecd15f19bae56f5f94d019bb666e9cbc2`,
+engine build `e854692736`, Temurin 25.0.4.1), one Apple Silicon laptop on AC
+power, each run started only after the host preflight passed. Each passes
+`validate-arcadedb-diagnostic.py --runtime --matched-sampling --require-cancellation`
+with the pinned identities: 264 of 264 samples (44 warm-ups, 220 measurements),
+no mismatch, timeout or error, cancellation verified on every sample with
+nothing left running (every sample rolled back on its own: zero targeted
+terminations). The recovery check takes a median 0.55-0.67 ms and is outside
+the measured interval. These are not LDBC Benchmark Results.
 
-| Scale | Load (import + view) | q1-q9 medians | slowest attack medians |
-|---|---|---|---|
-| example | 0.4 s | 1.1-2.3 ms | a6 2.6 ms |
-| SF0.1 | 9.9 s (8.2 + 1.6) | 7.2-24.5 ms | a2 110 ms, a1 38 ms, a5 34 ms |
-| SF0.3 | 27.8 s (18.9 + 8.8) | 16.9-79.9 ms | a2 446 ms, a1 140 ms, a5 136 ms |
+| Scale | Load (import + view) | q1-q9 medians | slowest attack medians | Bundle manifest (`bundle.json`) SHA-256 |
+|---|---|---|---|---|
+| example | 0.4 s (0.3 + 0.0) | 1.2-1.3 ms | a6 2.5 ms | `9ee419772d4bb86999a10f67b2225f3fd13f08a516771181b05a8b4a1f101c9c` |
+| SF0.1 | 9.8 s (8.1 + 1.6) | 6.9-23.3 ms | a2 106 ms, a1 37 ms, a5 33 ms | `628db39582240ddb44e3aed3d5e50e69bffea88fcf62a3437ef3500fc5c45543` |
+| SF0.3 | 27.7 s (19.1 + 8.5) | 16.4-76.8 ms | a2 451 ms, a1 132 ms, a5 130 ms | `a69c419f0cffde1dcdae3b227795ebd3c72365e15603709493d9d869f639fe78` |
 
-Probes on the same server:
+Bundles: `bundle-native-arcadedb.py` over each run directory
+(`publication_qualified: false`; diagnostic, runtime, matched-sampling,
+cancellation and, at SF0.3, internal-network checks verified).
+
+Probes on the same server image and client:
 - `recovery-probe`: the stress statement was observed running inside its tagged
-  session, `terminate query` acknowledged `terminated` after 106 ms, the worker
-  request failed with HTTP 409, no tagged statement or session remained, next
+  session, `terminate query` acknowledged `terminated` after 114 ms, the worker
+  request failed with HTTP 409, the per-sample cleanup then terminated the
+  session the statement left open; nothing tagged remained after 140 ms, next
   scalar 42.
-- `deadline-probe`: the coordinator deadline fired at 2.0003 s (SIGTERM); the
-  server was still running the abandoned statement, which the recovery step
-  terminated (its session ended with it) in 28 ms; the next isolated scalar
-  returned 42.
+- `deadline-probe`: the coordinator deadline fired at 2.000 s (SIGTERM). ArcadeDB
+  stops a statement whose HTTP client disconnects, so the abandoned statement
+  had already ended when the coordinator listed it; the coordinator terminated
+  its session in 32 ms and the next isolated scalar returned 42.
 
-Later ArcadeDB builds (the `26.11.1-SNAPSHOT` of 2026-10-13, `main` at
-`5100e4bf5b`) stop a statement themselves when its HTTP client disconnects, and
-close a terminated statement's session a few seconds after the statement. The
-probes accept both: the recovery probe runs the per-sample cleanup after the
-409 (which terminates the remaining session), and the deadline probe requires
-the coordinator to have terminated the abandoned statement or its session. On
-that build the lane passes 264 of 264 at every scale with cancellation verified;
-in the deadline probe the statement had already ended when the coordinator
-listed it and the session was terminated in 33-35 ms; in the recovery probe the
-whole cleanup took 167-177 ms.
+ArcadeDB 26.10.2 leaves the HTTP transaction session open when a read statement
+in it is terminated (the `terminate query` answer reports `sessionOpen`); the
+recovery step terminates that session explicitly, so the lane does not depend on
+the server's session expiry.
+
+Earlier development runs (client `1c11257e`, server built from ArcadeDB `main`
+at `2384a46e52`, unpinned) gave the same counts and times within noise.
 
 ## Before publication
 
-1. ArcadeDB 26.10.2, released from `main` (which has #9680, merged as
-   `2384a46e52`); check the release contains that commit.
-2. Replace the provisional `26.11.1-SNAPSHOT` pin with the 26.10.2 platform image digests in `run-native-arcadedb.py` and
-   `validate-arcadedb-diagnostic.py`, and the reviewed client source/image in
-   `CLIENT_PROFILES`.
-3. Clean-host W2/R10 runs at example, SF0.1 and SF0.3, then
-   `bundle-native-arcadedb.py`.
+Independent site admission of the bundles and a publication receipt, as for the
+[Neo4j lane](NEO4J.md).
