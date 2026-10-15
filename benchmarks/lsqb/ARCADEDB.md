@@ -79,7 +79,9 @@ server go idle before starting: the host preflight refuses a busy Docker VM.
 ## Qualified runs (ArcadeDB 26.10.2)
 
 Client source `cf18446882cd9a629e86715c6bb915625f30b708`, client image
-`sha256:7c32b62786151c225d93b57438bb70edd0d4fb6bb3f1c8bdb86f73ec3f315a8a`,
+`sha256:7c32b62786151c225d93b57438bb70edd0d4fb6bb3f1c8bdb86f73ec3f315a8a`
+(built with `benchmarks/lsqb/Cargo.lock` refreshed by cargo: the committed lock
+still pins turso 0.7.2 against the workspace's 0.8, so `--locked` refuses it),
 server `arcadedata/arcadedb:26.10.2` linux/arm64
 (`sha256:a8d755d0ef09efdaf769765833f15e4ecd15f19bae56f5f94d019bb666e9cbc2`,
 engine build `e854692736`, Temurin 25.0.4.1), one Apple Silicon laptop on AC
